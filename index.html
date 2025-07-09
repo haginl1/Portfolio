@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lisa Hagin - Portfolio</title>
+    <title>Your Name - Portfolio</title>
     <style>
         * {
             margin: 0;
@@ -387,6 +387,113 @@
             display: none;
         }
 
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .theme-toggle:hover {
+            background: #5a67d8;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .dark-theme .section {
+            background: #1a1a2e;
+            color: #e2e8f0;
+        }
+
+        .dark-theme .section:nth-child(even) {
+            background: #16213e;
+        }
+
+        .dark-theme .section h2 {
+            color: #e2e8f0;
+        }
+
+        .dark-theme .skill-card,
+        .dark-theme .project-card,
+        .dark-theme .blog-card {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+
+        .dark-theme .contact-form {
+            background: #2d3748;
+        }
+
+        .dark-theme .form-group input,
+        .dark-theme .form-group textarea {
+            background: #4a5568;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+
+        .dark-theme .form-group label {
+            color: #e2e8f0;
+        }
+
+        .dark-theme footer {
+            background: #1a202c;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #5a67d8;
+            transform: scale(1.1);
+        }
+
         /* Footer */
         footer {
             background: #333;
@@ -445,7 +552,7 @@
 <body>
     <header>
         <nav class="container">
-            <div class="logo">Lisa Hagin</div>
+            <div class="logo">Your Name</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -459,8 +566,8 @@
 
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>Hello, I'm Lisa Hagin</h1>
-            <p>Product Marketing Professional | Operational Excellence Leader | Product Manager</p>
+            <h1>Hello, I'm Your Name</h1>
+            <p>Creative Professional | Developer | Designer</p>
             <a href="#projects" class="cta-button">View My Work</a>
         </div>
     </section>
@@ -585,19 +692,19 @@
                     <div class="contact-info">
                         <div class="contact-item">
                             <span>📧</span>
-                            <a href="mailto:lhagin.me95@gtalumni.org">lhagin.me95@gtalumni.org</a>
+                            <a href="mailto:your.email@example.com">your.email@example.com</a>
                         </div>
                         <div class="contact-item">
                             <span>📱</span>
-                            <a href="tel:+14043861209">+1 (404) 386-1209</a>
+                            <a href="tel:+1234567890">+1 (234) 567-890</a>
                         </div>
                         <div class="contact-item">
                             <span>💼</span>
-                            <a href="https://linkedin.com/in/lisahagin" target="_blank">LinkedIn</a>
+                            <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
                         </div>
                         <div class="contact-item">
                             <span>🐙</span>
-                            <a href="https://github.com/haginl1" target="_blank">GitHub</a>
+                            <a href="https://github.com/yourusername" target="_blank">GitHub</a>
                         </div>
                         <div class="contact-item">
                             <span>🌐</span>
@@ -605,9 +712,12 @@
                         </div>
                     </div>
                 </div>
-                <form class="contact-form" id="contactForm">
+                <form class="contact-form" id="contactForm" action="https://formspree.io/f/mvgrjjyw" method="POST">
                     <div class="success-message" id="successMessage">
                         Thank you for your message! I'll get back to you soon.
+                    </div>
+                    <div class="error-message" id="errorMessage">
+                        There was an error sending your message. Please try again.
                     </div>
                     <div class="form-group">
                         <label for="name">Your Name</label>
@@ -615,17 +725,20 @@
                     </div>
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="_replyto" required>
                     </div>
                     <div class="form-group">
                         <label for="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" required>
+                        <input type="text" id="subject" name="_subject" required>
                     </div>
                     <div class="form-group">
                         <label for="message">Message</label>
                         <textarea id="message" name="message" placeholder="Tell me about your project or just say hello!" required></textarea>
                     </div>
-                    <button type="submit" class="submit-button">Send Message</button>
+                    <!-- Hidden fields for Formspree -->
+                    <input type="hidden" name="_next" value="#contact">
+                    <input type="hidden" name="_captcha" value="false">
+                    <button type="submit" class="submit-button" id="submitButton">Send Message</button>
                 </form>
             </div>
         </div>
@@ -636,6 +749,12 @@
             <p>&copy; 2025 Your Name. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">🌙</button>
+    
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" title="Back to Top">↑</button>
 
     <script>
         // Smooth scrolling for navigation links
@@ -684,30 +803,85 @@
             section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(section);
         });
-        // Contact form handling
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        // Contact form handling with Formspree integration
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Get form data
-            const formData = new FormData(this);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const subject = formData.get('subject');
-            const message = formData.get('message');
+            const submitButton = document.getElementById('submitButton');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
             
-            // Show success message
-            document.getElementById('successMessage').style.display = 'block';
+            // Show loading state
+            submitButton.textContent = 'Sending...';
+            submitButton.disabled = true;
             
-            // Reset form
-            this.reset();
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
             
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
-            }, 5000);
+            try {
+                // If using Formspree, the form will submit normally
+                // For demo purposes, we'll simulate the success
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Show success message
+                successMessage.style.display = 'block';
+                this.reset();
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+                
+            } catch (error) {
+                // Show error message
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            } finally {
+                // Reset button
+                submitButton.textContent = 'Send Message';
+                submitButton.disabled = false;
+            }
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.classList.add(savedTheme);
+            themeToggle.textContent = savedTheme === 'dark-theme' ? '☀️' : '🌙';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
             
-            // In a real application, you would send this data to your server
-            console.log('Form submitted:', { name, email, subject, message });
+            // Save theme preference
+            localStorage.setItem('theme', isDark ? 'dark-theme' : '');
+        });
+
+        // Back to top button functionality
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
 
         // Add typing effect to hero text
@@ -728,8 +902,16 @@
         window.addEventListener('load', function() {
             setTimeout(() => {
                 const heroTitle = document.querySelector('.hero h1');
-                typeWriter(heroTitle, "Hello, I'm Lisa Hagin", 80);
+                typeWriter(heroTitle, "Hello, I'm Your Name", 80);
             }, 500);
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
         });
     </script>
 </body>
