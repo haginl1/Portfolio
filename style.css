@@ -763,3 +763,5 @@ footer {
 .dark-theme #projects .project-link {
     color: #fff !important;
 }
+
+/* Add ScheduALL API integration project card styles if needed (inherits from .project-card) */
