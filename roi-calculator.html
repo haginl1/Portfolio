@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Title - Lisa Hagin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f8f9fa; color: #222; margin: 0; }
+        .container { max-width: 1400px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 10px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+        h1 { color: #667eea; margin-bottom: 0.5em; }
+        .project-image { width: 100%; max-width: 900px; height: 420px; background: #eee; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 1.5rem; border-radius: 8px; margin-bottom: 1.5em; }
+        .back-link { display: inline-block; margin-bottom: 2em; color: #667eea; text-decoration: none; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .project-details { margin-bottom: 2em; }
+        .project-links a { margin-right: 1em; color: #667eea; text-decoration: none; }
+        .project-links a:hover { text-decoration: underline; }
+        .carousel { position: relative; width: 100%; max-width: 1200px; height: 600px; margin-bottom: 1.5em; border-radius: 8px; overflow: hidden; background: #eee; }
+        .carousel img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .carousel img.active { display: block; }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(102,126,234,0.8); color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1.2rem; cursor: pointer; z-index: 2; }
+        .carousel-btn.left { left: 10px; }
+        .carousel-btn.right { right: 10px; }
+        .carousel-dots { text-align: center; margin-top: 0.5em; position: absolute; bottom: 12px; left: 0; width: 100%; z-index: 3; }
+        .carousel-dot { display: inline-block; width: 14px; height: 14px; margin: 0 6px; background: #ccc; border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: background 0.2s; }
+        .carousel-dot.active { background: #667eea; border-color: #667eea; }
+
+        /* Enhanced accent bar card style for project sections */
+        .project-section {
+            background: linear-gradient(120deg, #fafdff 80%, #e9eefd 100%);
+            border-radius: 16px;
+            margin: 2.5em 0;
+            padding: 2em 2em 1.5em 2em;
+            box-shadow: 0 2px 16px rgba(102,126,234,0.10);
+            transition: box-shadow 0.22s, transform 0.22s;
+            position: relative;
+            opacity: 0;
+            animation: fadeInCard 0.7s ease forwards;
+        }
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: none; }
+        }
+        .project-section:hover {
+            box-shadow: 0 12px 36px rgba(102,126,234,0.18);
+            transform: translateY(-3px) scale(1.012);
+        }
+        .project-section h2 {
+            display: flex;
+            align-items: center;
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: #2d3a6a;
+            margin: 0 0 0.8em 0;
+            padding-left: 1em;
+            border-left: 8px solid;
+            border-image: linear-gradient(180deg, #667eea 60%, #63b3ed 100%);
+            border-image-slice: 1;
+            background: none;
+            border-radius: 0 8px 8px 0;
+            min-height: 2.5em;
+            gap: 0.7em;
+        }
+        .project-section h2 .fa {
+            color: #667eea;
+            font-size: 1.7em;
+            margin-right: 0.18em;
+            margin-top: 0.08em;
+        }
+        .project-section ul {
+            margin: 0.7em 0 0 1.3em;
+            padding: 0;
+            font-size: 1.09rem;
+        }
+        .project-section ul li {
+            margin-bottom: 0.6em;
+            line-height: 1.75;
+        }
+        @media (max-width: 600px) {
+            .project-section {
+                padding: 1.1em 0.5em 0.8em 0.5em;
+                margin: 1.2em 0;
+            }
+            .project-section h2 {
+                font-size: 1.13rem;
+                min-height: 1.6em;
+                padding-left: 0.6em;
+            }
+            .project-section h2 .fa {
+                font-size: 1.1em;
+            }
+        }
+
+        /* Responsive styles */
+        .carousel, .project-image { aspect-ratio: 16/9; }
+        @media (max-width: 1300px) {
+            .container { max-width: 98vw; }
+            .carousel, .project-image { max-width: 98vw; aspect-ratio: 16/9; height: auto; }
+        }
+        @media (max-width: 900px) {
+            .container { max-width: 98vw; padding: 10px; }
+            .carousel, .project-image { max-width: 100vw; aspect-ratio: 16/9; height: auto; }
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 100vw; padding: 4px; border-radius: 0; }
+            h1 { font-size: 1.5rem; }
+            .carousel, .project-image { aspect-ratio: 4/3; height: auto; }
+            .carousel-btn { width: 28px; height: 28px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html#projects" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="carousel">
+            <button class="carousel-btn left" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
+            <img src="images/fiber-tracker-1.png" alt="Screenshot 1" class="active">
+            <img src="images/fiber-tracker-2.png" alt="Screenshot 2">
+            <img src="images/fiber-tracker-3.png" alt="Screenshot 3">
+            <img src="images/fiber-tracker-4.png" alt="Screenshot 4">
+            <img src="images/fiber-tracker-5.png" alt="Screenshot 5">
+            <button class="carousel-btn right" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+            <div class="carousel-dots">
+                <span class="carousel-dot active" onclick="goToSlide(0)"></span>
+                <span class="carousel-dot" onclick="goToSlide(1)"></span>
+                <span class="carousel-dot" onclick="goToSlide(2)"></span>
+                <span class="carousel-dot" onclick="goToSlide(3)"></span>
+                <span class="carousel-dot" onclick="goToSlide(4)"></span>
+            </div>
+        </div>
+        <h1>Fiber Tracker</h1>
+        <div class="project-details">
+            <p><strong>Description:</strong> A fully featured fiber tracking workflow management application.</p>
+            <p><strong>Role:</strong> Product Owner/Manager</p>
+            <p><strong>Technologies:</strong> HTML, CSS, JavaScript, SQL, API, etc.</p>
+        </div>
+        <div class="project-links">
+            <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+            <a href="#" target="_blank"><i class="fab fa-github"></i> Source Code</a>
+        </div>
+        <!-- New detailed sections -->
+        <section class="project-section">
+            <h2><span class="fa fa-star"></span> Features</h2>
+            <ul>
+                <li>Comprehensive fiber tracking dashboard</li>
+                <li>Automated workflow management</li>
+                <li>Customizable reporting and analytics</li>
+                <li>User roles and permissions</li>
+                <li>Responsive design for all devices</li>
+            </ul>
+        </section>
+        <section class="project-section">
+            <h2><span class="fa fa-exclamation-triangle"></span> Challenges</h2>
+            <ul>
+                <li>Integrating multiple data sources and APIs</li>
+                <li>Ensuring data accuracy and consistency</li>
+                <li>Designing an intuitive user interface</li>
+                <li>Managing project scope and stakeholder expectations</li>
+            </ul>
+        </section>
+        <section class="project-section">
+            <h2><span class="fa fa-trophy"></span> Outcomes</h2>
+            <ul>
+                <li>Improved workflow efficiency by 40%</li>
+                <li>Positive feedback from end users</li>
+                <li>Successful deployment across multiple teams</li>
+            </ul>
+        </section>
+        <section class="project-section">
+            <h2><span class="fa fa-lightbulb"></span> Lessons Learned</h2>
+            <ul>
+                <li>Importance of clear communication with stakeholders</li>
+                <li>Value of iterative design and user feedback</li>
+                <li>Best practices for API integration and data validation</li>
+            </ul>
+        </section>
+        <!-- End of project sections -->
+    </div>
+    <script>
+        let currentSlide = 0;
+        const images = document.querySelectorAll('.carousel img');
+        const dots = document.querySelectorAll('.carousel-dot');
+
+        function showSlide(index) {
+            images.forEach((img, i) => {
+                img.classList.toggle('active', i === index);
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            currentSlide = index;
+        }
+
+        function prevSlide() {
+            let newIndex = (currentSlide - 1 + images.length) % images.length;
+            showSlide(newIndex);
+        }
+
+        function nextSlide() {
+            let newIndex = (currentSlide + 1) % images.length;
+            showSlide(newIndex);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+    </script>
+</body>
+</html>
