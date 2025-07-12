@@ -195,7 +195,7 @@ nav {
 .skill-card {
     background: white;
     padding: 2rem;
-    border-radius: 10px;
+    border-radius: 0 !important;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     text-align: center;
     transition: transform 0.3s ease;
@@ -220,7 +220,7 @@ nav {
 
 .project-card {
     background: white;
-    border-radius: 10px;
+    border-radius: 0 !important;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
@@ -276,7 +276,7 @@ nav {
 
 .blog-card {
     background: white;
-    border-radius: 10px;
+    border-radius: 0 !important;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
@@ -358,7 +358,7 @@ nav {
 .contact-form {
     background: #f8f9fa;
     padding: 2rem;
-    border-radius: 10px;
+    border-radius: 0 !important;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -599,7 +599,7 @@ footer {
     flex-wrap: wrap;
     justify-content: flex-start;
     background: #fff;
-    border-radius: 18px;
+    border-radius: 0;
     box-shadow: 0 4px 24px rgba(118,75,162,0.10);
     padding: 2rem 2.5rem;
     margin-bottom: 2.5rem;
@@ -608,7 +608,7 @@ footer {
 .education-header img {
     width: 180px; /* Increased from 120px */
     height: 105px; /* Increased from 70px */
-    border-radius: 12px;
+    border-radius: 0;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     background: #fff;
     padding: 6px;
@@ -644,7 +644,7 @@ footer {
 }
 .education-card {
     background: #fff;
-    border-radius: 14px;
+    border-radius: 0px;
     box-shadow: 0 5px 18px rgba(118,75,162,0.10);
     padding: 2rem 1.5rem 1.5rem 1.5rem;
     text-align: left;
@@ -761,6 +761,19 @@ footer {
 /* .dark-theme #projects .project-title, */
 .dark-theme #projects .project-description,
 .dark-theme #projects .project-link {
+    color: #fff !important;
+}
+
+/* Get in Touch (Contact) section - Dark mode styles */
+.dark-theme #contact,
+.dark-theme #contact .contact-content,
+.dark-theme #contact .contact-info-section,
+.dark-theme #contact .contact-info,
+.dark-theme #contact .contact-item,
+.dark-theme #contact .contact-item a,
+.dark-theme #contact h2,
+.dark-theme #contact p,
+.dark-theme #contact label {
     color: #fff !important;
 }
 
