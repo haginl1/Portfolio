@@ -114,64 +114,72 @@
         <a href="index.html#projects" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
         <div class="carousel">
             <button class="carousel-btn left" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
-            <img src="images/fiber-tracker-1.png" alt="Screenshot 1" class="active">
-            <img src="images/fiber-tracker-2.png" alt="Screenshot 2">
-            <img src="images/fiber-tracker-3.png" alt="Screenshot 3">
-            <img src="images/fiber-tracker-4.png" alt="Screenshot 4">
-            <img src="images/fiber-tracker-5.png" alt="Screenshot 5">
+            <img src="images/AI-image-1.png" alt="Screenshot 1" class="active">
+            <img src="images/AI-image-2.png" alt="Screenshot 2">
+            <img src="images/AI-image-3.png" alt="Screenshot 3">
+            <img src="images/AI-image-4.png" alt="Screenshot 4">
+
             <button class="carousel-btn right" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
             <div class="carousel-dots">
                 <span class="carousel-dot active" onclick="goToSlide(0)"></span>
                 <span class="carousel-dot" onclick="goToSlide(1)"></span>
                 <span class="carousel-dot" onclick="goToSlide(2)"></span>
                 <span class="carousel-dot" onclick="goToSlide(3)"></span>
-                <span class="carousel-dot" onclick="goToSlide(4)"></span>
+                
+                
             </div>
         </div>
-        <h1>Fiber Tracker</h1>
+        <h1>AI-Sales Enablement and Training Videos</h1>
         <div class="project-details">
-            <p><strong>Description:</strong> A fully featured fiber tracking workflow management application.</p>
+            <p><strong>Description:</strong> A series of training videos designed to enhance sales enablement using AI-driven talent.</p>
             <p><strong>Role:</strong> Product Owner/Manager</p>
-            <p><strong>Technologies:</strong> HTML, CSS, JavaScript, SQL, API, etc.</p>
+            <p><strong>Technologies:</strong> Synthesia, Camtasia, PowerPoint, etc.</p>
         </div>
         <div class="project-links">
-            <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-            <a href="#" target="_blank"><i class="fab fa-github"></i> Source Code</a>
+            <a href="#" id="openVideoModal"><i class="fas fa-external-link-alt"></i> Video Demo StreamTV</a>
+            <a href="https://www.synthesia.io/" target="_blank"><i class="fas fa-external-link-alt"></i> Synthesia AI Website</a>
+            
+        </div>
+        <!-- Video Modal -->
+        <div id="videoModal" style="display:none;position:fixed;z-index:10000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);align-items:center;justify-content:center;">
+            <div style="position:relative;max-width:900px;width:90vw;background:#222;padding:0;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.25);display:flex;flex-direction:column;align-items:center;">
+                <button id="closeVideoModal" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.85);border:none;border-radius:50%;width:36px;height:36px;font-size:1.5rem;cursor:pointer;z-index:2;">&times;</button>
+                <video id="modalVideo" src="images/Altitude Stream TV Product Short.mp4" controls style="width:100%;max-width:880px;max-height:80vh;border-radius:8px;background:#000;display:block;"></video>
+            </div>
         </div>
         <!-- New detailed sections -->
         <section class="project-section">
             <h2><span class="fa fa-star"></span> Features</h2>
             <ul>
-                <li>Comprehensive fiber tracking dashboard</li>
-                <li>Automated workflow management</li>
-                <li>Customizable reporting and analytics</li>
-                <li>User roles and permissions</li>
-                <li>Responsive design for all devices</li>
+                <li>AI-powered talent video and audio narration</li>
+                <li>Adaptible script modifications and enhancements</li>
+                <li>Modular video content creation</li>
+                
             </ul>
         </section>
         <section class="project-section">
             <h2><span class="fa fa-exclamation-triangle"></span> Challenges</h2>
             <ul>
-                <li>Integrating multiple data sources and APIs</li>
-                <li>Ensuring data accuracy and consistency</li>
-                <li>Designing an intuitive user interface</li>
-                <li>Managing project scope and stakeholder expectations</li>
+                <li>Researching AI talent providers and selecting the best fit</li>
+                <li>Integrating video outputs into internal websites to track engagement</li>
+                <li>Developing concise messages applicable to a broad audience</li>
+                
             </ul>
         </section>
         <section class="project-section">
             <h2><span class="fa fa-trophy"></span> Outcomes</h2>
             <ul>
-                <li>Improved workflow efficiency by 40%</li>
+                <li>Improved product knowledge by all employees</li>
                 <li>Positive feedback from end users</li>
-                <li>Successful deployment across multiple teams</li>
+                <li>Successful deployment across multiple teams globally</li>
             </ul>
         </section>
         <section class="project-section">
             <h2><span class="fa fa-lightbulb"></span> Lessons Learned</h2>
             <ul>
-                <li>Importance of clear communication with stakeholders</li>
-                <li>Value of iterative design and user feedback</li>
-                <li>Best practices for API integration and data validation</li>
+                <li>Importance of clear script definition before rendering</li>
+                <li>Value of iterative camtasia as a tool for refining video content</li>
+                <li>Best practices for deploying videos internally to global teams</li>
             </ul>
         </section>
         <!-- End of project sections -->
@@ -203,6 +211,30 @@
 
         function goToSlide(index) {
             showSlide(index);
+        }
+
+        // Modal video logic
+        const openVideoModal = document.getElementById('openVideoModal');
+        const videoModal = document.getElementById('videoModal');
+        const closeVideoModal = document.getElementById('closeVideoModal');
+        const modalVideo = document.getElementById('modalVideo');
+        if (openVideoModal && videoModal && closeVideoModal && modalVideo) {
+            openVideoModal.addEventListener('click', function(e) {
+                e.preventDefault();
+                videoModal.style.display = 'flex';
+                modalVideo.currentTime = 0;
+                modalVideo.play();
+            });
+            closeVideoModal.addEventListener('click', function() {
+                videoModal.style.display = 'none';
+                modalVideo.pause();
+            });
+            videoModal.addEventListener('click', function(e) {
+                if (e.target === videoModal) {
+                    videoModal.style.display = 'none';
+                    modalVideo.pause();
+                }
+            });
         }
     </script>
 </body>
