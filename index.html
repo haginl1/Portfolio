@@ -1,6 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        .image-scroll-container {
+            width: 100vw;
+            overflow: hidden;
+            background: #f8f8f8;
+            border-top: 1px solid #e0e0e0;
+            padding: 1rem 0;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+        }
+        .image-scroll-track {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            width: fit-content;
+            animation: image-scroll-left 60s linear infinite;
+        }
+        @keyframes image-scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-66.666%);
+            }
+        }
+        .image-scroll-track img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            background: #fff;
+            border: 2px solid #eee;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-right: 2rem;
+        }
+        .image-scroll-track img:hover {
+            transform: scale(1.08) rotate(-2deg);
+            box-shadow: 0 8px 24px rgba(118,75,162,0.18);
+            border-color: #764ba2;
+        }
+        @media (max-width: 600px) {
+            .image-scroll-track img {
+                width: 56px;
+                height: 56px;
+                margin-right: 1rem;
+            }
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lisa Hagin - Portfolio</title>
@@ -26,7 +77,7 @@
 
     <section id="home" class="hero">
         <div class="hero-content">
-            <img src="images/Lhagin.png" alt="Lisa Hagin" class="profile-image" style="width:140px;height:140px;margin-bottom:1.5rem;box-shadow:0 6px 24px rgba(0,0,0,0.18);border-radius:50%;object-fit:cover;">
+            <img src="images/lisa hrc.jpg" alt="Lisa Hagin" class="profile-image" style="width:140px;height:140px;margin-bottom:1.5rem;box-shadow:0 6px 24px rgba(0,0,0,0.18);border-radius:50%;object-fit:cover;">
             <h1>Hello, I'm Lisa Hagin</h1>
             <p>Product Marketing | Product Management | Analytics | Process Improvement</p>
             <a href="#projects" class="cta-button">View My Work</a>
@@ -38,7 +89,7 @@
             <h2>About Me</h2>
             <div class="about-content">
                 <div>
-                    <img src="images/Lhagin.png" alt="Profile Picture" class="profile-image">
+                    <img src="images/lisa hrc.jpg" alt="Profile Picture" class="profile-image">
                 </div>
                 <div class="about-text">
                     <p>I'm a passionate creative professional with expertise in product marketing, product management and operational excellence. I love crafting beautiful, functional experiences that solve real problems and delight users.</p>
@@ -79,21 +130,34 @@
 
     <section id="projects" class="section">
         <div class="container">
-            <h2>Featured Projects</h2>
+            <h2>Product Marketing Projects</h2>
             <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-image">
-                         <img src="images/tableau-NFL - thumbnail.png" alt="Tableau Analytics Dashboards Screenshot" style="width:100%;height:100%;object-fit:cover;">
+                         <img src="images/AI-image-1.png" alt="AI Videos Screenshot" style="width:100%;height:100%;object-fit:cover;">
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">Tableau Analytics Dashboards</h3>
-                        <p class="project-description">A collaborative analytics application with real-time updates, drag-and-drop functionality, and team collaboration features.</p>
-                        <a href="tableau-project.html" class="project-link">View Project →</a>
+                        <h3 class="project-title">AI Videos</h3>
+                        <p class="project-description">A platform for generating, editing, and sharing AI-powered videos. Features include text-to-video, smart editing tools, and seamless social sharing.</p>
+                        <a href="ai-videos.html" class="project-link">View Project →</a>
                     </div>
                 </div>
                 <div class="project-card">
                     <div class="project-image">
-                         <img src="images/Missing-thumbnail.png" alt="Missing Materials Dashboard Screenshot" style="width:100%;height:100%;object-fit:cover;">
+                        <img src="images/ROI-Thumbnail.png" alt="ROI Calculator Screenshot" style="width:100%;height:100%;object-fit:cover;">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">ROI Calculator</h3>
+                        <p class="project-description">A modern, responsive web application for calculating return on investment (ROI) for various projects. Features include user authentication, data visualization, and export options.</p>
+                        <a href="roi-calculator.html" class="project-link">View Project →</a>
+                    </div>
+                </div>
+            </div>
+            <h2 style="margin-top:3rem;">Product Management Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/Missing-thumbnail.png" alt="Missing Materials Dashboard Screenshot" style="width:100%;height:100%;object-fit:cover;">
                     </div>
                     <div class="project-content">
                         <h3 class="project-title">Missing Materials Dashboard</h3>
@@ -113,16 +177,6 @@
                 </div>
                 <div class="project-card">
                     <div class="project-image">
-                         <img src="images/AI-image-1.png" alt="AI Videos Screenshot" style="width:100%;height:100%;object-fit:cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">AI Videos</h3>
-                        <p class="project-description">A platform for generating, editing, and sharing AI-powered videos. Features include text-to-video, smart editing tools, and seamless social sharing.</p>
-                        <a href="ai-videos.html" class="project-link">View Project →</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
                          <img src="images/Scheduall-Calcs.png" alt="ScheduALL API Integration Screenshot" style="width:100%;height:100%;object-fit:cover;">
                     </div>
                     <div class="project-content">
@@ -131,14 +185,27 @@
                         <a href="scheduall.html" class="project-link">View Project →</a>
                     </div>
                 </div>
+            </div>
+            <h2 style="margin-top:3rem;">Data and Analytics Projects</h2>
+            <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="images/ROI-Thumbnail.png" alt="ROI Calculator Screenshot" style="width:100%;height:100%;object-fit:cover;">
+                         <img src="images/tableau-NFL - thumbnail.png" alt="Tableau Analytics Dashboards Screenshot" style="width:100%;height:100%;object-fit:cover;">
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">ROI Calculator</h3>
-                        <p class="project-description">A modern, responsive web application for calculating return on investment (ROI) for various projects. Features include user authentication, data visualization, and export options.</p>
-                        <a href="roi-calculator.html" class="project-link">View Project →</a>
+                        <h3 class="project-title">Tableau Analytics Dashboards</h3>
+                        <p class="project-description">A collaborative analytics application with real-time updates, drag-and-drop functionality, and team collaboration features.</p>
+                        <a href="tableau-project.html" class="project-link">View Project →</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/placeholder-project.png" alt="Placeholder Project Screenshot" style="width:100%;height:100%;object-fit:cover;">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Data & Analytics Placeholder</h3>
+                        <p class="project-description">A future data and analytics project will be featured here. Stay tuned for updates and new case studies.</p>
+                        <a href="#" class="project-link">Coming Soon</a>
                     </div>
                 </div>
             </div>
@@ -319,6 +386,52 @@
     <!-- Back to Top Button -->
     <button class="back-to-top" id="backToTop" title="Back to Top">↑</button>
 
+    <!-- Automated Image Scroll (Personal Images Placeholder) -->
+<div class="image-scroll-container">
+    <div class="image-scroll-track">
+        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
+        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
+        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
+        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
+        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
+        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
+        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
+        <img src="images/buzz.gif" alt="Personal Placeholder 8">
+        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
+        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
+        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
+        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
+        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
+        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
+        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
+        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
+        <img src="images/buzz.gif" alt="Personal Placeholder 8">
+        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
+        <img src="images/ASDL_Gold_badge.png" alt="Personal Placeholder 10">
+        <!-- Duplicate for infinite scroll -->
+        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
+        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
+        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
+        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
+        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
+        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
+        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
+        <img src="images/buzz.gif" alt="Personal Placeholder 8">
+        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
+        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
+        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
+        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
+        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
+        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
+        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
+        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
+        <img src="images/buzz.gif" alt="Personal Placeholder 8">
+        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
+        <img src="images/ASDL_Gold_badge.png" alt="Personal Placeholder 10">
+
+    </div>
+</div>
+
     <script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -440,6 +553,8 @@
                 parallax.style.transform = '';
             }
         });
+
+        // No JS needed for image scroll, handled by CSS animation
     </script>
 </body>
 </html>

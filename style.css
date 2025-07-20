@@ -778,3 +778,35 @@ footer {
 }
 
 /* Add ScheduALL API integration project card styles if needed (inherits from .project-card) */
+   .image-scroll-container {
+        width: 100vw;
+        overflow: hidden;
+        background: #f8f8f8;
+        border-top: 1px solid #e0e0e0;
+        padding: 1rem 0;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+    }
+    .image-scroll-track {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        will-change: transform;
+        transition: none;
+    }
+    .image-scroll-track img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        background: #ddd;
+    }
+    @media (max-width: 600px) {
+        .image-scroll-track img {
+            width: 56px;
+            height: 56px;
+        }
+    }
