@@ -867,10 +867,10 @@ function isMobile() {
     return window.innerWidth <= 600 || /Mobi|Android/i.test(navigator.userAgent);
 }
 // Make mobile scroll even slower
-let SCROLL_SPEED = isMobile() ? 0.035 : 0.15;
+let SCROLL_SPEED = isMobile() ? 0.06 : 0.15;
 
 window.addEventListener('resize', () => {
-    SCROLL_SPEED = isMobile() ? 0.035 : 0.15;
+    SCROLL_SPEED = isMobile() ? 0.06 : 0.15;
 });
 
         function smoothAutoScroll(ts) {

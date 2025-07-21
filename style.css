@@ -337,6 +337,19 @@ nav {
     align-items: start;
 }
 
+@media (max-width: 700px) {
+    .contact-content {
+        display: flex;
+        flex-direction: column;
+    }
+    .contact-info-section {
+        order: 1;
+    }
+    .contact-form {
+        order: 2;
+    }
+}
+
 .contact-info-section {
     text-align: left;
 }
