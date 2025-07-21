@@ -139,17 +139,34 @@
     <section id="about" class="section">
         <div class="container">
             <h2>About Me</h2>
-            <div class="about-content">
-                <div>
-                    <img src="images/lisa hrc.jpg" alt="Profile Picture" class="profile-image">
+            <div class="about-content" style="display:flex;flex-wrap:wrap;align-items:center;gap:2rem;">
+                <div style="flex:0 0 140px;max-width:140px;width:100%;margin:auto;">
+                    <img src="images/lisa hrc.jpg" alt="Profile Picture" class="profile-image" style="width:120px;height:120px;object-fit:cover;border-radius:50%;box-shadow:0 4px 18px rgba(0,0,0,0.10);display:block;margin:auto;">
                 </div>
-                <div class="about-text">
-                    <p>I'm a passionate creative professional with expertise in product marketing, product management and operational excellence. I love crafting beautiful, functional experiences that solve real problems and delight users.</p>
-                    <p>With a background in both technical and creative fields, I bring a unique perspective to every project. I'm always eager to learn new technologies and push the boundaries of what's possible.</p>
-                    <p>I'm an engineer with a personality and I like to get things done. I believe in the power of collaboration and the importance of understanding user needs to drive product success.</p>
+                <div class="about-text" style="flex:1 1 220px;min-width:0;">
+                    <p style="margin-bottom:1em;line-height:1.6;font-size:1.05rem;">I'm a passionate creative professional with expertise in product marketing, product management and operational excellence. I love crafting beautiful, functional experiences that solve real problems and delight users.</p>
+                    <p style="margin-bottom:1em;line-height:1.6;font-size:1.05rem;">With a background in both technical and creative fields, I bring a unique perspective to every project. I'm always eager to learn new technologies and push the boundaries of what's possible.</p>
+                    <p style="margin-bottom:0;line-height:1.6;font-size:1.05rem;">I'm an engineer with a personality and I like to get things done. I believe in the power of collaboration and the importance of understanding user needs to drive product success.</p>
                 </div>
             </div>
         </div>
+        <style>
+        @media (max-width: 700px) {
+            .about-content {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1.2rem !important;
+            }
+            .about-content .profile-image {
+                width: 100px !important;
+                height: 100px !important;
+                margin-bottom: 0.5rem !important;
+            }
+            .about-text {
+                font-size: 0.98rem !important;
+            }
+        }
+        </style>
     </section>
 
     <section id="skills" class="section">
