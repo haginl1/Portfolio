@@ -160,7 +160,14 @@
     <header>
         <nav class="container">
             <div class="logo">Lisa Hagin</div>
-            <ul class="nav-links">
+            <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" tabindex="0">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect y="6" width="28" height="3" rx="1.5" fill="#764ba2"/>
+                  <rect y="13" width="28" height="3" rx="1.5" fill="#764ba2"/>
+                  <rect y="20" width="28" height="3" rx="1.5" fill="#764ba2"/>
+                </svg>
+            </button>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -690,6 +697,54 @@
 </div>
 
     <script>
+        // Hamburger menu toggle for mobile (robust version)
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        let isMenuOpen = false;
+        const hamburgerSVG = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect y="6" width="28" height="3" rx="1.5" fill="#764ba2"/><rect y="13" width="28" height="3" rx="1.5" fill="#764ba2"/><rect y="20" width="28" height="3" rx="1.5" fill="#764ba2"/></svg>`;
+        const closeSVG = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="6" width="20" height="3" rx="1.5" fill="#764ba2" transform="rotate(45 14 14)"/><rect x="5" y="19" width="20" height="3" rx="1.5" fill="#764ba2" transform="rotate(-45 14 14)"/></svg>`;
+        function setHamburgerIcon(open) {
+            hamburgerBtn.innerHTML = open ? closeSVG : hamburgerSVG;
+            hamburgerBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        }
+        setHamburgerIcon(false);
+        hamburgerBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isMenuOpen = !isMenuOpen;
+            navLinks.classList.toggle('open', isMenuOpen);
+            setHamburgerIcon(isMenuOpen);
+        });
+
+        // Close menu when clicking outside (on mobile only)
+        document.addEventListener('click', function(e) {
+            if (isMenuOpen && window.innerWidth <= 700) {
+                // If click is outside nav or hamburger
+                if (!navLinks.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                    isMenuOpen = false;
+                    navLinks.classList.remove('open');
+                    setHamburgerIcon(false);
+                }
+            }
+        });
+
+        // Close menu on resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 700) {
+                isMenuOpen = false;
+                navLinks.classList.remove('open');
+                setHamburgerIcon(false);
+            }
+        });
+        // Close menu when a nav link is clicked (on mobile)
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 700) {
+                    isMenuOpen = false;
+                    navLinks.classList.remove('open');
+                    setHamburgerIcon(false);
+                }
+            });
+        });
         // Modal functionality for image scroll
         const imageModal = document.getElementById('imageModal');
         const modalImg = document.getElementById('modalImg');
