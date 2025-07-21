@@ -2,6 +2,58 @@
 <html lang="en">
 <head>
     <style>
+        /* Modal styles for image preview */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: auto;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s;
+        }
+        .modal.open {
+            display: flex;
+        }
+        .modal-content {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            background: #fff;
+            padding: 0.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .modal-content img {
+            max-width: 80vw;
+            max-height: 70vh;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            background: #fff;
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 2rem;
+            color: #764ba2;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 2;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: #b47ddb;
+        }
         .image-scroll-container {
             width: 100vw;
             overflow: hidden;
@@ -18,7 +70,7 @@
             gap: 0;
             align-items: center;
             width: fit-content;
-            animation: image-scroll-left 60s linear infinite;
+            animation: image-scroll-left 1000s linear infinite;
         }
         @keyframes image-scroll-left {
             0% {
@@ -107,12 +159,12 @@
                 <div class="skill-card">
                     <div class="skill-icon"><i class="fas fa-users-gear"></i></div>
                     <h3>Product Development</h3>
-                    <p>SaaS, Cloud First, B2B</p>
+                    <p>SaaS, Cloud First, B2B, SAFe, SCRUM</p>
                 </div>
                 <div class="skill-card">
                     <div class="skill-icon"><i class="fas fa-chart-line"></i></div>
                     <h3>Business Intelligence</h3>
-                    <p>Data Analysis, Visualization, Reporting</p>
+                    <p>Data Analysis, SQL, Tableau,Visualization, Reporting</p>
                 </div>
                 <div class="skill-card">
                     <div class="skill-icon"><i class="fas fa-mobile-alt"></i></div>
@@ -122,7 +174,7 @@
                 <div class="skill-card">
                     <div class="skill-icon"><i class="fas fa-cloud"></i></div>
                     <h3>Leadership</h3>
-                    <p>Cross Collaboration, Team Leadership, Strategic Thinking</p>
+                    <p>Executive Presentaion, Cross Collaboration, Team Leadership, Strategic Thinking</p>
                 </div>
             </div>
         </div>
@@ -320,22 +372,22 @@
                 <div class="contact-info-section">
                     <p>I'm always interested in new opportunities and collaborations. Let's connect and create something amazing together!</p>
                     <div class="contact-info">
-                        <div class="contact-item">
+                        <!-- <div class="contact-item">
                             <span>📧</span>
                             <a href="mailto:your.email@example.com">lhagin.me95@gtalumni.org</a>
-                        </div>
-                        <div class="contact-item">
+                        </div> -->
+                        <!-- <div class="contact-item">
                             <span>📱</span>
                             <a href="tel:+1234567890">+1 (404) 386-1209</a>
-                        </div>
+                        </div> -->
                         <div class="contact-item">
                             <span>💼</span>
                             <a href="https://linkedin.com/in/lisahagin" target="_blank">LinkedIn</a>
                         </div>
-                        <div class="contact-item">
+                        <!-- <div class="contact-item">
                             <span>🐙</span>
                             <a href="https://github.com/haginl1" target="_blank">GitHub</a>
-                        </div>
+                        </div> -->
                         <!--<div class="contact-item">
                             <span>🌐</span>
                             <a href="https://yourwebsite.com" target="_blank">Portfolio</a>
@@ -387,52 +439,150 @@
     <button class="back-to-top" id="backToTop" title="Back to Top">↑</button>
 
     <!-- Automated Image Scroll (Personal Images Placeholder) -->
+    <!-- Modal for image preview -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalCloseBtn" aria-label="Close">&times;</button>
+            <img id="modalImg" src="" alt="Preview" />
+        </div>
+    </div>
 <div class="image-scroll-container">
     <div class="image-scroll-track">
-        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
-        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
-        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
-        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
-        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
-        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
-        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
-        <img src="images/buzz.gif" alt="Personal Placeholder 8">
-        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
-        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
-        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
-        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
-        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
-        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
-        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
-        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
-        <img src="images/buzz.gif" alt="Personal Placeholder 8">
-        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
-        <img src="images/ASDL_Gold_badge.png" alt="Personal Placeholder 10">
+        <img src="images/scroll-images/1.JPEG" alt="Personal Placeholder 1">
+        <img src="images/scroll-images/2.JPEG" alt="Personal Placeholder 2">
+        <img src="images/scroll-images/3.JPEG" alt="Personal Placeholder 3">
+        <img src="images/scroll-images/4.JPEG" alt="Personal Placeholder 4">
+        <img src="images/scroll-images/5.JPEG" alt="Personal Placeholder 5">
+        <img src="images/scroll-images/6.JPEG" alt="Personal Placeholder 6">
+        <img src="images/scroll-images/7.JPEG" alt="Personal Placeholder 7">
+        <img src="images/scroll-images/8.JPEG" alt="Personal Placeholder 8">
+        <img src="images/scroll-images/9.JPEG" alt="Personal Placeholder 9">
+        <img src="images/scroll-images/10.JPEG" alt="Personal Placeholder 10">
+        <img src="images/scroll-images/11.JPEG" alt="Personal Placeholder 11">
+        <img src="images/scroll-images/12.JPEG" alt="Personal Placeholder 12">
+        <img src="images/scroll-images/13.JPEG" alt="Personal Placeholder 13">
+        <img src="images/scroll-images/14.JPEG" alt="Personal Placeholder 14">
+        <img src="images/scroll-images/15.JPEG" alt="Personal Placeholder 15">
+        <img src="images/scroll-images/16.JPEG" alt="Personal Placeholder 16">
+        <img src="images/scroll-images/17.JPEG" alt="Personal Placeholder 17">
+        <img src="images/scroll-images/18.JPEG" alt="Personal Placeholder 18">
+        <img src="images/scroll-images/19.JPEG" alt="Personal Placeholder 19">
+        <img src="images/scroll-images/20.JPEG" alt="Personal Placeholder 20">
+        <img src="images/scroll-images/21.JPEG" alt="Personal Placeholder 21">
+        <img src="images/scroll-images/22.JPEG" alt="Personal Placeholder 22">
+        <img src="images/scroll-images/23.JPEG" alt="Personal Placeholder 23">
+        <img src="images/scroll-images/24.JPEG" alt="Personal Placeholder 24">
+        <img src="images/scroll-images/25.JPEG" alt="Personal Placeholder 25">
+        <img src="images/scroll-images/26.JPEG" alt="Personal Placeholder 26">
+        <img src="images/scroll-images/27.JPEG" alt="Personal Placeholder 27">
+        <img src="images/scroll-images/28.JPEG" alt="Personal Placeholder 28">
+        <img src="images/scroll-images/29.JPEG" alt="Personal Placeholder 29">
+        <img src="images/scroll-images/30.JPEG" alt="Personal Placeholder 30">
+        <img src="images/scroll-images/31.JPEG" alt="Personal Placeholder 31">
+        <img src="images/scroll-images/32.JPEG" alt="Personal Placeholder 32">
+        <img src="images/scroll-images/33.JPEG" alt="Personal Placeholder 33">
+        <img src="images/scroll-images/34.JPEG" alt="Personal Placeholder 34">
+        <img src="images/scroll-images/35.JPEG" alt="Personal Placeholder 35">
+        <img src="images/scroll-images/36.JPEG" alt="Personal Placeholder 36">
+        <img src="images/scroll-images/37.JPEG" alt="Personal Placeholder 37">
+        <img src="images/scroll-images/38.JPEG" alt="Personal Placeholder 38">
+        <img src="images/scroll-images/39.JPEG" alt="Personal Placeholder 39">
+        <img src="images/scroll-images/40.JPEG" alt="Personal Placeholder 40">
+        <img src="images/scroll-images/41.JPEG" alt="Personal Placeholder 41">
+        <img src="images/scroll-images/42.JPEG" alt="Personal Placeholder 42">
+        <img src="images/scroll-images/43.JPEG" alt="Personal Placeholder 43">
+        <img src="images/scroll-images/44.JPEG" alt="Personal Placeholder 44">
+        <img src="images/scroll-images/45.JPEG" alt="Personal Placeholder 45">
+        <img src="images/scroll-images/46.jpg" alt="Personal Placeholder 46">
+        <img src="images/scroll-images/47.jpg" alt="Personal Placeholder 47">
+        <img src="images/scroll-images/48.JPG" alt="Personal Placeholder 48">
+        <img src="images/scroll-images/49.jpg" alt="Personal Placeholder 49">
+        <img src="images/scroll-images/50.jpg" alt="Personal Placeholder 50">
+        <img src="images/scroll-images/51.jpg" alt="Personal Placeholder 51">
+        <img src="images/scroll-images/52.jpg" alt="Personal Placeholder 52">
         <!-- Duplicate for infinite scroll -->
-        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
-        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
-        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
-        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
-        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
-        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
-        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
-        <img src="images/buzz.gif" alt="Personal Placeholder 8">
-        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
-        <img src="images/lisa florence.jpg" alt="Personal Placeholder 1">
-        <img src="images/lisa wedding.jpg" alt="Personal Placeholder 2">
-        <img src="images/lisa2.jpg" alt="Personal Placeholder 3">
-        <img src="images/lisa.jpg" alt="Personal Placeholder 4">
-        <img src="images/lisa hair.jpg" alt="Personal Placeholder 5">
-        <img src="images/lisa dock.jpg" alt="Personal Placeholder 6">
-        <img src="images/lisa house.jpg" alt="Personal Placeholder 7">
-        <img src="images/buzz.gif" alt="Personal Placeholder 8">
-        <img src="images/Buzz Placeholder Web_16_1.png" alt="Personal Placeholder 9">
-        <img src="images/ASDL_Gold_badge.png" alt="Personal Placeholder 10">
+        <img src="images/scroll-images/1.JPEG" alt="Personal Placeholder 1">
+        <img src="images/scroll-images/2.JPEG" alt="Personal Placeholder 2">
+        <img src="images/scroll-images/3.JPEG" alt="Personal Placeholder 3">
+        <img src="images/scroll-images/4.JPEG" alt="Personal Placeholder 4">
+        <img src="images/scroll-images/5.JPEG" alt="Personal Placeholder 5">
+        <img src="images/scroll-images/6.JPEG" alt="Personal Placeholder 6">
+        <img src="images/scroll-images/7.JPEG" alt="Personal Placeholder 7">
+        <img src="images/scroll-images/8.JPEG" alt="Personal Placeholder 8">
+        <img src="images/scroll-images/9.JPEG" alt="Personal Placeholder 9">
+        <img src="images/scroll-images/10.JPEG" alt="Personal Placeholder 10">
+        <img src="images/scroll-images/11.JPEG" alt="Personal Placeholder 11">
+        <img src="images/scroll-images/12.JPEG" alt="Personal Placeholder 12">
+        <img src="images/scroll-images/13.JPEG" alt="Personal Placeholder 13">
+        <img src="images/scroll-images/14.JPEG" alt="Personal Placeholder 14">
+        <img src="images/scroll-images/15.JPEG" alt="Personal Placeholder 15">
+        <img src="images/scroll-images/16.JPEG" alt="Personal Placeholder 16">
+        <img src="images/scroll-images/17.JPEG" alt="Personal Placeholder 17">
+        <img src="images/scroll-images/18.JPEG" alt="Personal Placeholder 18">
+        <img src="images/scroll-images/19.JPEG" alt="Personal Placeholder 19">
+        <img src="images/scroll-images/20.JPEG" alt="Personal Placeholder 20">
+        <img src="images/scroll-images/21.JPEG" alt="Personal Placeholder 21">
+        <img src="images/scroll-images/22.JPEG" alt="Personal Placeholder 22">
+        <img src="images/scroll-images/23.JPEG" alt="Personal Placeholder 23">
+        <img src="images/scroll-images/24.JPEG" alt="Personal Placeholder 24">
+        <img src="images/scroll-images/25.JPEG" alt="Personal Placeholder 25">
+        <img src="images/scroll-images/26.JPEG" alt="Personal Placeholder 26">
+        <img src="images/scroll-images/27.JPEG" alt="Personal Placeholder 27">
+        <img src="images/scroll-images/28.JPEG" alt="Personal Placeholder 28">
+        <img src="images/scroll-images/29.JPEG" alt="Personal Placeholder 29">
+        <img src="images/scroll-images/30.JPEG" alt="Personal Placeholder 30">
+        <img src="images/scroll-images/31.JPEG" alt="Personal Placeholder 31">
+        <img src="images/scroll-images/32.JPEG" alt="Personal Placeholder 32">
+        <img src="images/scroll-images/33.JPEG" alt="Personal Placeholder 33">
+        <img src="images/scroll-images/34.JPEG" alt="Personal Placeholder 34">
+        <img src="images/scroll-images/35.JPEG" alt="Personal Placeholder 35">
+        <img src="images/scroll-images/36.JPEG" alt="Personal Placeholder 36">
+        <img src="images/scroll-images/37.JPEG" alt="Personal Placeholder 37">
+        <img src="images/scroll-images/38.JPEG" alt="Personal Placeholder 38">
+        <img src="images/scroll-images/39.JPEG" alt="Personal Placeholder 39">
+        <img src="images/scroll-images/40.JPEG" alt="Personal Placeholder 40">
+        <img src="images/scroll-images/41.JPEG" alt="Personal Placeholder 41">
+        <img src="images/scroll-images/42.JPEG" alt="Personal Placeholder 42">
+        <img src="images/scroll-images/43.JPEG" alt="Personal Placeholder 43">
+        <img src="images/scroll-images/44.JPEG" alt="Personal Placeholder 44">
+        <img src="images/scroll-images/45.JPEG" alt="Personal Placeholder 45">
+        <img src="images/scroll-images/46.jpg" alt="Personal Placeholder 46">
+        <img src="images/scroll-images/47.jpg" alt="Personal Placeholder 47">
+        <img src="images/scroll-images/48.JPG" alt="Personal Placeholder 48">
+        <img src="images/scroll-images/49.jpg" alt="Personal Placeholder 49">
+        <img src="images/scroll-images/50.jpg" alt="Personal Placeholder 50">
+        <img src="images/scroll-images/51.jpg" alt="Personal Placeholder 51">
+        <img src="images/scroll-images/52.jpg" alt="Personal Placeholder 52">
 
     </div>
 </div>
 
     <script>
+        // Modal functionality for image scroll
+        const imageModal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        // Delegate click to all images in the scroll
+        document.querySelectorAll('.image-scroll-track img').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+                modalImg.src = this.src;
+                modalImg.alt = this.alt;
+                imageModal.classList.add('open');
+            });
+        });
+        // Close modal on close button
+        modalCloseBtn.addEventListener('click', function() {
+            imageModal.classList.remove('open');
+            modalImg.src = '';
+        });
+        // Close modal on background click
+        imageModal.addEventListener('click', function(e) {
+            if (e.target === imageModal) {
+                imageModal.classList.remove('open');
+                modalImg.src = '';
+            }
+        });
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
