@@ -537,7 +537,7 @@ nav {
 /* Back to top button */
 .back-to-top {
     position: fixed;
-    bottom: 20px;
+    bottom: 6.5rem; /* Move above image scroll arrows */
     right: 20px;
     background: #667eea;
     color: white;
