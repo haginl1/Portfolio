@@ -858,10 +858,19 @@
         }
 
         // --- Very slow, smooth, continuous auto-scroll ---
-        let autoScrollPaused = false;
-        let autoScrollDelayTimeout = null;
-        let lastTimestamp = null;
-        const SCROLL_SPEED = 0.15; // pixels per ms (very slow)
+
+let autoScrollPaused = false;
+let autoScrollDelayTimeout = null;
+let lastTimestamp = null;
+// Adjust scroll speed for mobile
+function isMobile() {
+    return window.innerWidth <= 600 || /Mobi|Android/i.test(navigator.userAgent);
+}
+let SCROLL_SPEED = isMobile() ? 0.07 : 0.15; // slower on mobile
+
+window.addEventListener('resize', () => {
+    SCROLL_SPEED = isMobile() ? 0.07 : 0.15;
+});
 
         function smoothAutoScroll(ts) {
             if (!lastTimestamp) lastTimestamp = ts;
