@@ -62,8 +62,16 @@
         }
         /* ...existing code... */
         .hero h1 {
-            font-size: 2.3rem !important;
-        }
+        font-size: 2.3rem !important;
+    }
+    /* Responsive Lisa HRC image size in hero section */
+    .hero .profile-image {
+        width: 22vw !important;
+        max-width: 220px !important;
+        min-width: 120px !important;
+        height: auto !important;
+        aspect-ratio: 1 / 1;
+    }
         @media (max-width: 700px) {
             /* Reduce section title font size on mobile */
             .section h2 {
@@ -72,6 +80,14 @@
             }
             .hero h1 {
                 font-size: 1.95rem !important;
+            }
+            /* Reduce Lisa HRC image size in hero section on mobile */
+            .hero .profile-image {
+                width: 38vw !important;
+                max-width: 140px !important;
+                min-width: 80px !important;
+                height: auto !important;
+                aspect-ratio: 1 / 1;
             }
         }
         /* Modal styles for image preview */
