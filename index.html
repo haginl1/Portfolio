@@ -13,238 +13,6 @@
     <meta name="twitter:description" content="Product Marketing | Product Management | Analytics | Process Improvement" />
     <meta name="twitter:image" content="https://haginl1.github.io/Portfolio/images/lisa%20hrc.jpg" />
     <!-- End social sharing metadata -->
-    <style>
-        /* Section background images for visual enhancement */
-        .section {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            z-index: 1;
-        }
-        #about.section {
-            background-image: url('images/bg-about.jpg');
-        }
-        #skills.section {
-            background-image: url('images/bg-skills.jpg');
-        }
-        #certifications.section {
-            background-image: url('images/bg-certifications.jpg');
-        }
-        #projects.section {
-            background-image: url('images/bg-projects.jpg');
-        }
-        #education.section {
-            background-image: url('images/bg-education.jpg');
-        }
-        #hobbies.section {
-            background-image: url('images/bg-hobbies.jpg');
-        }
-        #contact.section {
-            background-image: url('images/bg-contact.jpg');
-        }
-        /* Optional: add a semi-transparent overlay for text readability */
-        .section::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.72);
-            z-index: -1;
-        }
-        @media (max-width: 700px) {
-            .contact-form {
-                width: 90vw !important;
-                max-width: 95vw !important;
-                min-width: 0 !important;
-                margin-left: auto !important;
-                margin-right: auto !important;
-                box-sizing: border-box !important;
-                padding-right: 4vw !important;
-            }
-            .section {
-                background-attachment: scroll;
-                background-size: cover;
-            }
-            .section::before {
-                background: rgba(255,255,255,0.88);
-            }
-        }
-        /* ...existing code... */
-        .hero h1 {
-        font-size: 2.3rem !important;
-    }
-    /* Responsive Lisa HRC image size in hero section */
-    .hero .profile-image {
-        width: 22vw !important;
-        max-width: 220px !important;
-        min-width: 110px !important;
-        height: auto !important;
-        aspect-ratio: 1 / 1;
-    }
-        @media (max-width: 700px) {
-            /* Reduce section title font size on mobile */
-            .section h2 {
-                font-size: 1.55rem !important;
-                line-height: 1.28;
-            }
-            .hero h1 {
-                font-size: 1.95rem !important;
-            }
-            /* Reduce Lisa HRC image size in hero section on mobile */
-            .hero .profile-image {
-                width: 38vw !important;
-                max-width: 130px !important;
-                min-width: 80px !important;
-                height: auto !important;
-                aspect-ratio: 1 / 1;
-            }
-        }
-        /* Modal styles for image preview */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: auto;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.3s;
-        }
-        .modal.open {
-            display: flex;
-        }
-        .modal-content {
-            max-width: 90vw;
-            max-height: 80vh;
-            border-radius: 18px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            background: #fff;
-            padding: 0.5rem;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .modal-content img {
-            max-width: 80vw;
-            max-height: 70vh;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-            background: #fff;
-        }
-        .modal-close {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            font-size: 2rem;
-            color: #764ba2;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 2;
-            transition: color 0.2s;
-        }
-        .modal-close:hover {
-            color: #b47ddb;
-        }
-        .image-scroll-container {
-            width: 100vw;
-            overflow-x: auto;
-            overflow-y: hidden;
-            background: #f8f8f8;
-            border-top: 1px solid #e0e0e0;
-            padding: 1rem 0;
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            z-index: 100;
-            scroll-behavior: smooth;
-        }
-        .scroll-arrow.left-arrow {
-            position: fixed;
-            left: 8px;
-            bottom: 1.5rem;
-            background: #fff;
-            border: none;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            width: 36px;
-            height: 36px;
-            z-index: 101;
-            cursor: pointer;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.85;
-            transition: background 0.2s;
-        }
-        .scroll-arrow.right-arrow {
-            position: fixed;
-            right: 8px;
-            bottom: 1.5rem;
-            background: #fff;
-            border: none;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            width: 36px;
-            height: 36px;
-            z-index: 101;
-            cursor: pointer;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.85;
-            transition: background 0.2s;
-        }
-        .scroll-arrow.left-arrow:active,
-        .scroll-arrow.right-arrow:active {
-            background: #f0e6fa;
-        }
-        .image-scroll-track {
-            display: flex;
-            gap: 0;
-            align-items: center;
-            width: max-content;
-            white-space: nowrap;
-        }
-        @keyframes image-scroll-left {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-66.666%);
-            }
-        }
-        .image-scroll-track img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-            background: #fff;
-            border: 2px solid #eee;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-right: 2rem;
-        }
-        .image-scroll-track img:hover {
-            transform: scale(1.08) rotate(-2deg);
-            box-shadow: 0 8px 24px rgba(118,75,162,0.18);
-            border-color: #764ba2;
-        }
-        @media (max-width: 600px) {
-            .image-scroll-track img {
-                width: 56px;
-                height: 56px;
-                margin-right: 1rem;
-            }
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lisa Hagin - Portfolio</title>
@@ -285,14 +53,14 @@
     <section id="about" class="section">
         <div class="container">
             <h2>About Me</h2>
-            <div class="about-content" style="display:flex;flex-wrap:wrap;align-items:center;gap:2rem;">
-                <div style="flex:0 0 270px;max-width:270px;width:100%;margin:auto;display:flex;justify-content:center;align-items:center;min-width:140px;padding-bottom:1.5rem;">
-                    <img src="images/20.JPEG" alt="Profile Picture" class="profile-image" style="width:22vw;max-width:220px;min-width:110px;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:50%;box-shadow:0 6px 24px rgba(0,0,0,0.18);display:block;margin:auto;">
+            <div class="about-content">
+                <div>
+                    <img src="images/20.JPEG" alt="Profile Picture" class="profile-image">
                 </div>
-                <div class="about-text" style="flex:1 1 320px;min-width:0;max-width:700px;padding-left:2vw;padding-right:2vw;">
-                    <p style="margin-bottom:1em;line-height:1.6;font-size:1.05rem;">I'm a passionate creative professional with expertise in product marketing, product management and operational excellence. I love crafting beautiful, functional experiences that solve real problems and delight users.</p>
-                    <p style="margin-bottom:1em;line-height:1.6;font-size:1.05rem;">With a background in both technical and creative fields, I bring a unique perspective to every project. I'm always eager to learn new technologies and push the boundaries of what's possible.</p>
-                    <p style="margin-bottom:0;line-height:1.6;font-size:1.05rem;">I'm an engineer with a personality and I like to get things done. I believe in the power of collaboration and the importance of understanding user needs to drive product success.</p>
+                <div class="about-text">
+                    <p>I'm a passionate creative professional with expertise in product marketing, product management and operational excellence. I love crafting beautiful, functional experiences that solve real problems and delight users.</p>
+                    <p>With a background in both technical and creative fields, I bring a unique perspective to every project. I'm always eager to learn new technologies and push the boundaries of what's possible.</p>
+                    <p>I'm an engineer with a personality and I like to get things done. I believe in the power of collaboration and the importance of understanding user needs to drive product success.</p>
                 </div>
             </div>
         </div>
@@ -344,7 +112,7 @@
                 flex-direction: column;
                 align-items: flex-end;
                 justify-content: flex-end;
-                padding: 0.6rem 0.7rem 0.8rem 0.7rem;
+                padding: 0.05rem 0.2rem 0.05rem 0.1rem;
                 box-shadow: 0 4px 18px rgba(0,0,0,0.10);
                 z-index: 1000;
                 border-radius: 0 0 14px 14px;
@@ -355,15 +123,16 @@
                 display: flex;
             }
             .nav-links li {
-                margin: 0.01rem 0;
+                margin: 0;
                 width: 100%;
+                padding: 0;
             }
             .nav-links a {
-                font-size: 0.98rem;
+                font-size: 0.88rem;
                 color: #764ba2;
                 width: 100%;
                 display: block;
-                padding: 0.16rem 0;
+                padding: 0.01rem 0;
                 text-align: right;
             }
             .nav-links a:active,
@@ -408,7 +177,7 @@
                 margin-right: auto !important;
             }
             .about-text {
-                font-size: 0.98rem !important;
+                font-size: 1.25rem !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 max-width: 95vw !important;
@@ -416,7 +185,7 @@
         }
         @media (min-width: 701px) {
             .about-text {
-                font-size: 1.32rem !important;
+                font-size: 1.65rem !important;
             }
         }
         </style>
@@ -454,58 +223,58 @@
     <section class="section" id="certifications">
         <div class="container">
             <h2 style="font-size:1.35rem;color:#764ba2;margin-bottom:1.2em;letter-spacing:0.5px;display:flex;align-items:center;"><i class="fas fa-certificate" style="margin-right:0.7em;font-size:1.3em;color:#f7b731;"></i>Certifications</h2>
-            <div class="certifications-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
+            <div class="certifications-grid">
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#667eea;"><i class="fa-solid fa-chart-bar"></i></div>
+                    <div class="cert-icon cert-icon-blue"><i class="fa-solid fa-chart-bar"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">Tableau Desktop Specialist</div>
                         <div style="font-size:0.98rem;color:#444;">Tableau</div>
                     </div>
                 </div>
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#f7b731;"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="cert-icon cert-icon-yellow"><i class="fa-solid fa-lightbulb"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">Pragmatic Marketing Certified</div>
                         <div style="font-size:0.98rem;color:#444;">Foundations, Focus, Build</div>
                     </div>
                 </div>
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#00b894;"><i class="fa-solid fa-network-wired"></i></div>
+                    <div class="cert-icon cert-icon-green"><i class="fa-solid fa-network-wired"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">SAFe Agilist</div>
                         <div style="font-size:0.98rem;color:#444;">Scaled Agile Framework</div>
                     </div>
                 </div>
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#e17055;"><i class="fa-solid fa-users"></i></div>
+                    <div class="cert-icon cert-icon-orange"><i class="fa-solid fa-users"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">Certified ScrumMaster (CSM)</div>
                         <div style="font-size:0.98rem;color:#444;">Agile Methodology</div>
                     </div>
                 </div>
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#0984e3;"><i class="fa-brands fa-oracle"></i></div>
+                    <div class="cert-icon cert-icon-blue2"><i class="fa-brands fa-oracle"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">Oracle Cloud Infrastructure (OCI) Certified</div>
                         <div style="font-size:0.98rem;color:#444;">Oracle Cloud</div>
                     </div>
                 </div>
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#ff7675;"><i class="fa-solid fa-user-check"></i></div>
+                    <div class="cert-icon cert-icon-pink"><i class="fa-solid fa-user-check"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">Certified SCRUM Product Owner (CSPO)</div>
                         <div style="font-size:0.98rem;color:#444;">Agile Product Ownership</div>
                     </div>
                 </div>
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#6c5ce7;"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <div class="cert-icon cert-icon-purple"><i class="fa-solid fa-chalkboard-user"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">Certified Instructional Designer</div>
                         <div style="font-size:0.98rem;color:#444;">Learning & Development</div>
                     </div>
                 </div>
                 <div class="cert-card" style="background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(118,75,162,0.08);padding:1.5rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;">
-                    <div style="font-size:2.1rem;color:#00b894;"><i class="fa-solid fa-chalkboard"></i></div>
+                    <div class="cert-icon cert-icon-green"><i class="fa-solid fa-chalkboard"></i></div>
                     <div>
                         <div style="font-weight:700;font-size:1.08rem;color:#222;">Certified Trainer</div>
                         <div style="font-size:0.98rem;color:#444;">Facilitation & Training</div>
@@ -591,7 +360,7 @@
                     </div>
                     <div class="project-content">
                         <h3 class="project-title">Data & Analytics with SheetGo</h3>
-                        <p class="project-description">Taking GSheets and Excel to the next level with a simple yet powerful plugin that automates workflows.</p>
+                        <p class="project-description">Taking GSheets and Excel to the next level with a simple, yet powerful, plugin that automates workflows.</p>
                         <a href="sheetgo.html" class="project-link">View Project →</a>
                     </div>
                 </div>
@@ -676,24 +445,24 @@
         <div class="container">
             <h2>Personal Interests & Hobbies</h2>
             <div class="hobbies-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 2rem;">
-                <div class="hobby-card" style="background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.08); padding: 2rem; text-align: center;">
+            <div class="hobby-card">
                     <div style="font-size: 2.5rem; margin-bottom: 1rem;">⛳</div>
-                    <h3 style="margin-bottom: 0.5rem; color: #764ba2;">Golf</h3>
+                    <h3>Golf</h3>
                     <p>Enjoying the outdoors, challenging myself, and connecting with friends on the course.</p>
                 </div>
                 <div class="hobby-card" style="background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.08); padding: 2rem; text-align: center;">
                     <div style="font-size: 2.5rem; margin-bottom: 1rem;">🌍</div>
-                    <h3 style="margin-bottom: 0.5rem; color: #764ba2;">Travel</h3>
+                    <h3>Travel</h3>
                     <p>Exploring new places, cultures, and cuisines to broaden my perspective and creativity.</p>
                 </div>
                 <div class="hobby-card" style="background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.08); padding: 2rem; text-align: center;">
                     <div style="font-size: 2.5rem; margin-bottom: 1rem;">🛠️</div>
-                    <h3 style="margin-bottom: 0.5rem; color: #764ba2;">Tinkering</h3>
+                    <h3>Tinkering</h3>
                     <p>Building personal projects, learning new tech, and experimenting with creative ideas.</p>
                 </div>
                 <div class="hobby-card" style="background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.08); padding: 2rem; text-align: center;">
                     <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎣</div>
-                    <h3 style="margin-bottom: 0.5rem; color: #764ba2;">Fishing</h3>
+                    <h3>Fishing</h3>
                     <p>Relaxing by the water, enjoying nature, and the thrill of the catch.</p>
                 </div>
             </div>
@@ -843,7 +612,7 @@
         <img src="images/scroll-images/54.JPEG" alt="Trestevere, Rome">
         <img src="images/scroll-images/55.JPEG" alt="Cinque Terra, Italy">
         <img src="images/scroll-images/56.JPEG" alt="The Last Supper, Milan">
-        <img src="images/scroll-images/57.jpg" alt="Alaska">
+        <img src="images/scroll-images/57.JPEG" alt="Alaska">
         <img src="images/scroll-images/58.jpg" alt="Duomo Florence, Italy Cathedral">
         <img src="images/scroll-images/59.jpg" alt="Fiat 500 Wine and Drive- Bella">
         <img src="images/scroll-images/60.jpg" alt="Grouper Sarasota, FL">
