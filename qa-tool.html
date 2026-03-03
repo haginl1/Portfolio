@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File QA Tool | Corpay AP Automation</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23522239' rx='12' width='100' height='100'/><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='55' font-weight='bold' fill='white'>C</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Corpay 2021 Official Brand Colors */
+            --corpay-plum: #522239;        /* accent1 - Primary brand color */
+            --corpay-burgundy: #981239;    /* accent2 */
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-amber: #f59e0b;
+            --bg: #f9fafb;
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --card-bg: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--corpay-plum) 0%, var(--corpay-burgundy) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--corpay-plum);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .privacy-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 900px) {
+            .main-content {
+                grid-template-columns: 280px 1fr;
+            }
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--corpay-plum);
+        }
+
+        .file-type-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .file-type-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-type-btn:hover {
+            border-color: var(--corpay-plum);
+            background: rgba(82, 34, 57, 0.05);
+        }
+
+        .file-type-btn.active {
+            background: linear-gradient(135deg, var(--corpay-plum) 0%, var(--corpay-burgundy) 100%);
+            color: white;
+            border-color: var(--corpay-plum);
+        }
+
+        .file-type-icon {
+            font-size: 1.5rem;
+            min-width: 1.5rem;
+        }
+
+        .file-type-btn:first-child .file-type-icon {
+            content: '💳';
+        }
+
+        .file-type-btn:last-child .file-type-icon {
+            content: '👥';
+        }
+
+        .file-type-label {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .file-type-desc {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--corpay-plum);
+            background: rgba(82, 34, 57, 0.05);
+        }
+
+        .drop-zone-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .drop-zone-text {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .drop-zone-hint {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .browse-btn {
+            background: linear-gradient(135deg, var(--corpay-plum) 0%, var(--corpay-burgundy) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(82, 34, 57, 0.3);
+        }
+
+        .results-panel {
+            display: none;
+        }
+
+        .results-header {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .file-badge {
+            display: inline-block;
+            background: rgba(82, 34, 57, 0.1);
+            color: var(--corpay-plum);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-value.pass { color: var(--accent-green); }
+        .summary-value.fail { color: var(--accent-red); }
+        .summary-value.warn { color: var(--accent-amber); }
+        .summary-value.info { color: var(--accent-blue); }
+
+        .summary-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .checks-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .check-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .check-item {
+            background: var(--card-bg);
+            border-left: 4px solid var(--border);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .check-item.pass { border-left-color: var(--accent-green); }
+        .check-item.fail { border-left-color: var(--accent-red); }
+        .check-item.warn { border-left-color: var(--accent-amber); }
+
+        .check-icon {
+            font-size: 1.25rem;
+            min-width: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .check-icon.pass { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .check-icon.fail { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+        .check-icon.warn { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
+
+        .check-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .check-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+
+        .check-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .error-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .error-table th {
+            background: rgba(82, 34, 57, 0.05);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .error-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .error-table tr:hover td {
+            background: rgba(82, 34, 57, 0.02);
+        }
+
+        .row-num {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .error-type {
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .error-type.error { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+        .error-type.warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--corpay-plum) 0%, var(--corpay-burgundy) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(82, 34, 57, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .overall-status {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .overall-status.pass {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-green);
+        }
+
+        .overall-status.fail {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+        }
+
+        .overall-status.warn {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--accent-amber);
+        }
+
+        .collapsible-header {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .collapsible-header:hover {
+            background: rgba(82, 34, 57, 0.05);
+            border-color: var(--corpay-plum);
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        .collapsible-content.open {
+            display: block;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .toggle-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .spinner {
+            border: 4px solid rgba(82, 34, 57, 0.1);
+            border-top-color: var(--corpay-plum);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .processing {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Cross-file validation styles */
+        .dual-upload {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .drop-zone.mini {
+            padding: 1rem;
+        }
+
+        .drop-zone.mini .drop-zone-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .drop-zone.mini .drop-zone-text {
+            font-size: 0.9rem;
+        }
+
+        .drop-zone.loaded {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .file-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .file-status.loaded {
+            color: var(--accent-green);
+        }
+
+        .browse-btn.small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+        }
+
+        .run-cross-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .run-cross-btn:not(:disabled) {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .run-cross-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .run-cross-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .cross-summary {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-top: 1.5rem;
+        }
+
+        .cross-file-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .cross-file-card h4 {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .cross-file-card .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+
+        .cross-file-card .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .match-visualization {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .match-bar-container {
+            margin-bottom: 1rem;
+        }
+
+        .match-bar {
+            display: flex;
+            height: 24px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .match-bar-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .match-bar-segment.matched {
+            background: var(--accent-green);
+        }
+
+        .match-bar-segment.orphaned {
+            background: var(--accent-amber);
+        }
+
+        .match-bar-segment.missing {
+            background: var(--accent-red);
+        }
+
+        .match-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .legend-dot.matched { background: var(--accent-green); }
+        .legend-dot.orphaned { background: var(--accent-amber); }
+        .legend-dot.missing { background: var(--accent-red); }
+
+        /* ERP Selector */
+        .erp-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .erp-select:hover {
+            border-color: var(--corpay-plum);
+        }
+
+        .erp-select:focus {
+            outline: none;
+            border-color: var(--corpay-plum);
+            box-shadow: 0 0 0 3px rgba(82, 34, 57, 0.1);
+        }
+
+        .erp-select option {
+            padding: 0.5rem;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+
+        .erp-select optgroup {
+            font-weight: 600;
+            color: var(--corpay-plum);
+        }
+
+        .erp-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--corpay-plum) 0%, var(--corpay-burgundy) 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Export Buttons */
+        .export-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .export-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .export-btn:hover {
+            border-color: var(--text-muted);
+            background: var(--bg);
+        }
+
+        .export-btn.primary {
+            background: linear-gradient(135deg, var(--corpay-plum) 0%, var(--corpay-burgundy) 100%);
+            color: white;
+            border: none;
+        }
+
+        .export-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(82, 34, 57, 0.3);
+        }
+
+        .export-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .export-section h4 {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <div>
+                    <h1>File QA Tool</h1>
+                </div>
+            </div>
+            <p class="subtitle">Corpay AP Automation - Data Validation & Quality Assurance</p>
+            <span class="privacy-badge">✅ 100% Private - No Data Stored</span>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-title">File Type</div>
+                    <div class="file-type-selector">
+                        <button class="file-type-btn active" onclick="selectFileType('payment')">
+                            <span class="file-type-icon">💳</span>
+                            <div>
+                                <div class="file-type-label">Payment</div>
+                                <div class="file-type-desc">Invoice/Payment file</div>
+                            </div>
+                        </button>
+                        <button class="file-type-btn" onclick="selectFileType('vendor')">
+                            <span class="file-type-icon">👥</span>
+                            <div>
+                                <div class="file-type-label">Vendor Master</div>
+                                <div class="file-type-desc">Vendor file</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">ERP System</div>
+                    <select class="erp-select" onchange="selectERP(this.value)">
+                        <option value="generic">Generic Format</option>
+                        <optgroup label="Enterprise Systems">
+                            <option value="sap">SAP</option>
+                            <option value="oracle">Oracle EBS</option>
+                            <option value="netsuite">NetSuite</option>
+                            <option value="dynamics">Dynamics 365</option>
+                            <option value="workday">Workday</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <div class="card-title">Upload File</div>
+                    <div class="drop-zone" ondrop="handleDrop(event)" ondragover="event.preventDefault(); event.currentTarget.classList.add('dragover')" ondragleave="event.currentTarget.classList.remove('dragover')">
+                        <div class="drop-zone-icon">📁</div>
+                        <div class="drop-zone-text">Drop your file here</div>
+                        <div class="drop-zone-hint">or click to browse</div>
+                        <input type="file" class="file-input" id="fileInput" accept=".csv,.xlsx,.xls,.json,.xml" onchange="processFile(this.files[0])">
+                        <button class="browse-btn" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                    </div>
+                </div>
+
+                <div id="resultsPanel" class="results-panel">
+                    <div class="results-header" id="resultsHeader"></div>
+                    <div id="resultsContent"></div>
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <h3>Upload a file to get started</h3>
+                    <p>Drag or select a CSV, Excel, JSON, or XML file</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let currentFileType = 'payment';
+        let currentResults = null;
+        let currentERP = 'generic';
+
+        const fieldDefinitions = {
+            payment: {
+                required: ['vendor_id', 'vendor_name', 'invoice_number', 'invoice_amount', 'invoice_date'],
+                recommended: ['bank_account', 'currency', 'po_number', 'cost_center'],
+                validations: {
+                    invoice_number: { type: 'text', maxLength: 50 },
+                    invoice_amount: { type: 'number' },
+                    invoice_date: { type: 'date' },
+                    vendor_id: { type: 'text', maxLength: 30 }
+                }
+            },
+            vendor: {
+                required: ['vendor_id', 'vendor_name', 'bank_account'],
+                recommended: ['vendor_address', 'city', 'country', 'tax_id'],
+                validations: {
+                    vendor_id: { type: 'text', maxLength: 30 },
+                    bank_account: { type: 'text', maxLength: 34 }
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFileInput();
+        });
+
+        function selectFileType(type) {
+            currentFileType = type;
+            document.querySelectorAll('.file-type-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.file-type-btn').classList.add('active');
+        }
+
+        function selectERP(erp) {
+            currentERP = erp;
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            const files = event.dataTransfer.files;
+            if (files.length > 0) processFile(files[0]);
+        }
+
+        function setupFileInput() {
+            document.getElementById('fileInput').addEventListener('change', (e) => {
+                if (e.target.files.length > 0) processFile(e.target.files[0]);
+            });
+        }
+
+        function processFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target.result;
+                const ext = file.name.split('.').pop().toLowerCase();
+                let data = [];
+
+                if (['xlsx', 'xls'].includes(ext)) {
+                    const workbook = XLSX.read(content, { type: 'array' });
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                } else if (ext === 'csv') {
+                    data = content.split('\n').map(line => line.split(','));
+                }
+
+                analyzeFile(data, file.name);
+            };
+
+            if (['xlsx', 'xls'].includes(file.name.split('.').pop().toLowerCase())) {
+                reader.readAsArrayBuffer(file);
+            } else {
+                reader.readAsText(file);
+            }
+        }
+
+        function analyzeFile(data, fileName) {
+            if (!data || data.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            const results = {
+                fileName: fileName,
+                fileType: currentFileType,
+                rowCount: data.length - 1,
+                columnCount: data[0].length,
+                headers: data[0],
+                checks: [],
+                summary: { passed: 0, warnings: 0, failed: 0 }
+            };
+
+            // Run basic checks
+            const fields = fieldDefinitions[currentFileType];
+            const headers = data[0].map(h => h.toString().toLowerCase());
+
+            fields.required.forEach(field => {
+                if (headers.some(h => h.includes(field))) {
+                    results.checks.push({ name: field, status: 'pass', details: 'Found' });
+                    results.summary.passed++;
+                } else {
+                    results.checks.push({ name: field, status: 'fail', details: 'Missing required field' });
+                    results.summary.failed++;
+                }
+            });
+
+            currentResults = results;
+            displayResults(results);
+        }
+
+        function displayResults(results) {
+            const statusIcon = results.summary.failed > 0 ? '❌' : '✅';
+            document.getElementById('resultsPanel').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+
+            let html = `
+                <div class="overall-status ${results.summary.failed > 0 ? 'fail' : 'pass'}">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">${statusIcon}</div>
+                    <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem;">
+                        ${results.summary.failed > 0 ? 'Issues Found' : 'File Ready'}
+                    </div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">
+                        ${results.rowCount} rows, ${results.columnCount} columns
+                    </div>
+                </div>
+            `;
+
+            html += `
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-value pass">${results.summary.passed}</div>
+                        <div class="summary-label">Passed</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value fail">${results.summary.failed}</div>
+                        <div class="summary-label">Failed</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value warn">${results.summary.warnings}</div>
+                        <div class="summary-label">Warnings</div>
+                    </div>
+                </div>
+            `;
+
+            html += `<div class="checks-section"><div class="section-title">Validation Results</div><div class="check-list">`;
+            results.checks.forEach(check => {
+                const icon = check.status === 'pass' ? '✓' : '✗';
+                html += `
+                    <div class="check-item ${check.status}">
+                        <div class="check-icon ${check.status}">${icon}</div>
+                        <div class="check-content">
+                            <div class="check-title">${check.name}</div>
+                            <div class="check-details">${check.details}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+
+            html += `<button class="download-btn" onclick="downloadReport()">📥 Download Report</button>`;
+
+            document.getElementById('resultsContent').innerHTML = html;
+        }
+
+        function downloadReport() {
+            if (!currentResults) return;
+            const r = currentResults;
+            let report = `FILE QA REPORT\n${new Date().toISOString()}\n${'='.repeat(50)}\n\nFile: ${r.fileName}\nRows: ${r.rowCount}\nColumns: ${r.columnCount}\n\nValidation Checks:\n`;
+            r.checks.forEach(c => {
+                report += `[${c.status.toUpperCase()}] ${c.name}: ${c.details}\n`;
+            });
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `QA_Report_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+        }
+    </script>
+
+    <footer style="text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem;">
+        <div>Corpay File QA Tool - Data Validation & Quality Assurance</div>
+        <div style="font-size: 0.75rem; margin-top: 0.5rem;">100% Private - No data is stored or transmitted</div>
+    </footer>
+</body>
+</html>
