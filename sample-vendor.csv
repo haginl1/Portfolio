@@ -1,0 +1,9 @@
+vendor_id,vendor_name,bank_account,vendor_address,city,country,tax_id
+VEN001,Acme Corporation,US1234567890,123 Business Plaza,New York,USA,12-3456789
+VEN002,Global Tech Solutions,US0987654321,456 Tech Drive,San Francisco,USA,98-7654321
+VEN003,Premier Supplies Inc,GB9876543210,789 Supply Lane,London,United Kingdom,GB123456789
+VEN004,International Services,DE1234567890123456,321 Service Road,Berlin,Germany,DE123456789
+VEN005,Professional Consulting,CA123456789,654 Consultant Way,Toronto,Canada,CA123456789
+VEN006,Digital Marketing Plus,AU123456789,987 Digital Street,Sydney,Australia,AU123456789
+VEN007,Creative Agency,JP123456789012,246 Creative Plaza,Tokyo,Japan,JP1234567890121
+VEN008,Manufacturing Partners,IN123456789123,135 Factory Road,Bangalore,India,IN1234567890
