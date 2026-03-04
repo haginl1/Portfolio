@@ -192,7 +192,7 @@ function save(){
   setTimeout(()=>document.getElementById('saved').classList.remove('show'),1500);
 }
 
-function updCnt(){document.getElementById('cnt').innerHTML='<b>'+order.length+'</b> images';}
+function updCnt(){let filled=order.filter(x=>x!==null).length;document.getElementById('cnt').innerHTML='<b>'+filled+'</b>/'+order.length+' images';}
 
 function getRows(){
   let config={
@@ -203,7 +203,28 @@ function getRows(){
   return config[layout]||config['20x16'];
 }
 
+function getTotalCells(){
+  let cfg=getRows();
+  return cfg.cells.reduce((a,b)=>a+b,0);
+}
+
+function ensureArrays(){
+  let total=getTotalCells();
+  while(order.length<total){
+    order.push(null);
+    settings.push({zoom:100,panX:0,panY:0});
+  }
+  while(order.length>total){
+    let id=order.pop();
+    settings.pop();
+    if(id!==null){
+      imgs=imgs.filter(x=>x.id!==id);
+    }
+  }
+}
+
 function build(){
+  ensureArrays();
   let cfg=getRows();
   let html='<div class="collage '+layout+'" id="grid">';
   let idx=0;
@@ -400,22 +421,29 @@ document.getElementById('repFile').onchange=function(e){
 document.getElementById('addFile').onchange=function(e){
   let files=Array.from(e.currentTarget.files);
   let cnt=0;
-  let insertPos=targetPos!==null?targetPos:order.length;
-  files.forEach(function(file,fileIdx){
-    processImg(file,function(dataUrl){
-      let id=nextId++;
-      imgs.push({id,data:dataUrl,w:100,h:100,x:0,y:0,name:file.name});
-      order.splice(insertPos+fileIdx,0,id);
-      settings.splice(insertPos+fileIdx,0,{zoom:100,panX:0,panY:0});
-      cnt++;
-      if(cnt===files.length){
-        targetPos=null;
-        selPos=null;
-        save();
-        build();
-      }
+  if(targetPos!==null){
+    files.forEach(function(file,fileIdx){
+      processImg(file,function(dataUrl){
+        let id=nextId++;
+        imgs.push({id,data:dataUrl,w:100,h:100,x:0,y:0,name:file.name});
+        let pos=targetPos+fileIdx;
+        if(pos<order.length){
+          let oldId=order[pos];
+          order[pos]=id;
+          if(oldId!==null){
+            imgs=imgs.filter(x=>x.id!==oldId);
+          }
+        }
+        cnt++;
+        if(cnt===files.length){
+          targetPos=null;
+          selPos=null;
+          save();
+          build();
+        }
+      });
     });
-  });
+  }
   e.currentTarget.value='';
 };
 
