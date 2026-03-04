@@ -169,7 +169,7 @@ const defaultImages = [
   'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2224%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3EImage%3C/text%3E%3C/svg%3E'
 ];
 const KEY='collageV3';
-let imgs=[],order=[],settings=[],selPos=null,style='warmbw',layout='20x16',mode='edit',swapSrc=null,nextId=100;
+let imgs=[],order=[],settings=[],selPos=null,style='warmbw',layout='20x16',mode='edit',swapSrc=null,nextId=100,targetPos=null;
 let hiResImgs={};
 
 function init(){
@@ -336,7 +336,14 @@ function rename(){
 }
 
 function repClick(){if(selPos===null){alert('Tap an image first');return;}document.getElementById('repFile').click();}
-function addClick(){document.getElementById('addFile').click();}
+function addClick(){
+  if(selPos===null){
+    alert('Select a position first');
+    return;
+  }
+  targetPos=selPos;
+  document.getElementById('addFile').click();
+}
 
 function processImg(file,cb,forHiRes=false){
   let reader=new FileReader();
@@ -377,14 +384,17 @@ document.getElementById('repFile').onchange=function(e){
 document.getElementById('addFile').onchange=function(e){
   let files=Array.from(e.currentTarget.files);
   let cnt=0;
-  files.forEach(function(file){
+  let insertPos=targetPos!==null?targetPos:order.length;
+  files.forEach(function(file,fileIdx){
     processImg(file,function(dataUrl){
       let id=nextId++;
       imgs.push({id,data:dataUrl,w:100,h:100,x:0,y:0,name:file.name});
-      order.push(id);
-      settings.push({zoom:100,panX:0,panY:0});
+      order.splice(insertPos+fileIdx,0,id);
+      settings.splice(insertPos+fileIdx,0,{zoom:100,panX:0,panY:0});
       cnt++;
       if(cnt===files.length){
+        targetPos=null;
+        selPos=null;
         save();
         build();
       }
