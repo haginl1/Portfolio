@@ -76,6 +76,8 @@ input[type=file]{display:none}
 .htu-toggle-icon.collapsed{transform:rotate(-90deg)}
 .htu-content{max-height:1000px;overflow:hidden;transition:max-height .3s ease,opacity .3s ease;opacity:1}
 .htu-content.collapsed{max-height:0;opacity:0}
+.htu-container.collapsed{padding:10px 15px !important}
+.htu-container.collapsed .htu-toggle{margin-bottom:0}
 @media(max-width:768px){
   .htu-content.collapsed-mobile{max-height:0;opacity:0}
   .htu-content:not(.collapsed-mobile){max-height:1000px;opacity:1}
@@ -86,7 +88,7 @@ input[type=file]{display:none}
 <h1>COLLAGE EDITOR</h1>
 <p class="sub">Add photos • Arrange • Generate print directly</p>
 
-<div style="background: rgba(240, 192, 96, 0.1); border: 1px solid rgba(240, 192, 96, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 16px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+<div style="background: rgba(240, 192, 96, 0.1); border: 1px solid rgba(240, 192, 96, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 16px; max-width: 1200px; margin-left: auto; margin-right: auto; transition: padding 0.3s ease;" class="htu-container collapsed" id="htuContainer">
   <button class="htu-toggle" onclick="toggleHowToUse()" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleHowToUse()}">
     <span>📖 How to Use</span>
     <span class="htu-toggle-icon collapsed" id="htuIcon">▼</span>
@@ -562,8 +564,10 @@ load();build();
 function toggleHowToUse(){
   let content=document.getElementById('htuContent');
   let icon=document.getElementById('htuIcon');
+  let container=document.getElementById('htuContainer');
   content.classList.toggle('collapsed');
   icon.classList.toggle('collapsed');
+  container.classList.toggle('collapsed');
 }
 
 window.addEventListener('resize',()=>{
