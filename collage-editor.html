@@ -104,9 +104,15 @@ input[type=file]{display:none}
 <button class="btn add" onclick="addClick()">➕ Add Images</button>
 <div class="modes">
 <div class="mode on" id="mEdit" onclick="setMode('edit')">✏️ Edit</div>
-<div class="mode" id="mArr" onclick="setMode('arrange')">↔️ Arrange</div>
+<div class="mode" id="mArr" onclick="setMode('arrange')">🔄 Arrange</div>
 </div>
 <div class="info" id="info"><h4>👆 Tap an image</h4><p>Select to adjust, replace or delete</p></div>
+<div style="display:none;background:rgba(96,192,240,.1);border:1px solid rgba(96,192,240,.3);border-radius:6px;padding:10px;margin-bottom:10px;font-size:11px;color:#aaa;text-align:center;margin-top:-6px;" id="arrangeInfo">
+  <h4 style="color:#60c0f0;margin-bottom:4px;">🔄 Arrange Mode Active</h4>
+  <p style="margin:0;">Click position 1, then click position 2 to swap any two images. Click "Cancel Selection" to deselect.</p>
+  <button class="btn sec" onclick="cancelSwap()" style="margin-top:8px;padding:8px;">✕ Cancel Selection</button>
+  <p style="margin:4px 0 0 0;color:#888;font-size:9px;">Selected: <span id="swapStatus">Select first position</span></p>
+</div>
 <div class="panel" id="edits">
 <h3>Adjustments</h3>
 <div class="grp"><label>Zoom</label><div class="sld"><input type="range" id="zoom" min="100" max="250" value="100" step="5" oninput="updSlider()"><span class="val" id="zoomV">100%</span></div></div>
@@ -228,11 +234,26 @@ function setMode(m){
     edit.classList.add('on');
     arr.classList.remove('on');
     document.getElementById('edits').style.display='block';
+    document.getElementById('info').style.display='block';
+    document.getElementById('arrangeInfo').style.display='none';
+    selPos=null;
+    swapSrc=null;
   }else{
     edit.classList.remove('on');
     arr.classList.add('on');
     document.getElementById('edits').style.display='none';
+    document.getElementById('info').style.display='none';
+    document.getElementById('arrangeInfo').style.display='block';
+    swapSrc=null;
+    document.getElementById('swapStatus').textContent='Select first position';
   }
+  build();
+}
+
+function cancelSwap(){
+  swapSrc=null;
+  document.getElementById('swapStatus').textContent='Select first position';
+  build();
 }
 
 function swap(pos){
@@ -241,6 +262,7 @@ function swap(pos){
   order[swapSrc]=order[pos];
   order[pos]=tmp;
   swapSrc=null;
+  document.getElementById('swapStatus').textContent='Select first position';
   build();
   save();
 }
@@ -249,8 +271,13 @@ function select(pos){
   if(mode==='arrange'){
     if(swapSrc===null){
       swapSrc=pos;
+      document.getElementById('swapStatus').textContent='Position '+(pos+1)+' selected • Now select position to swap';
+    }else if(swapSrc===pos){
+      swapSrc=null;
+      document.getElementById('swapStatus').textContent='Select first position';
     }else{
       swap(pos);
+      document.getElementById('swapStatus').textContent='Select first position';
     }
     build();
   }else{
