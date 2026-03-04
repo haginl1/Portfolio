@@ -206,7 +206,7 @@ function build(){
   for(let r=0;r<cfg.rows;r++){
     html+='<div class="row">';
     for(let c=0;c<cfg.cells[r];c++){
-      let pos=r*10+c;
+      let pos=idx;
       let id=order[idx];
       let img=imgs.find(x=>x.id===id);
       let set=settings[idx]||{zoom:100,panX:0,panY:0};
