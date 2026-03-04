@@ -17,7 +17,8 @@ h1{text-align:center;font-size:18px;font-weight:300;margin-bottom:4px}
 .collage.p16x20{aspect-ratio:16/20}
 .collage.p8x10{aspect-ratio:8/10}
 .row{display:flex;gap:4px;flex:1}
-.cell{flex:1;position:relative;overflow:hidden;border-radius:2px;cursor:pointer;background:var(--mat,#f5f0e6);padding:4px;box-shadow:2px 2px 5px rgba(0,0,0,.4)}
+.cell{flex:1;position:relative;overflow:hidden;border-radius:2px;cursor:pointer;background:var(--mat,#f5f0e6);padding:4px;box-shadow:2px 2px 5px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.cell.empty::before{content:'📷';font-size:24px;color:rgba(0,0,0,.2)}
 .cell.sel{box-shadow:0 0 0 3px #f0c060!important}
 .cell.swap{box-shadow:0 0 0 3px #60c0f0!important;opacity:.7}
 .inner{position:absolute;top:4px;left:4px;right:4px;bottom:4px;background-size:cover;background-position:center;border-radius:1px}
@@ -109,7 +110,7 @@ input[type=file]{display:none}
 <div class="mode on" id="mEdit" onclick="setMode('edit')">✏️ Edit</div>
 <div class="mode" id="mArr" onclick="setMode('arrange')">🔄 Arrange</div>
 </div>
-<div class="info" id="info"><h4>👆 Tap an image</h4><p>Select to adjust, replace or delete</p></div>
+<div class="info" id="info"><h4>� Click any tile</h4><p>Select a tile to add, edit, or delete images</p></div>
 <div style="display:none;background:rgba(96,192,240,.1);border:1px solid rgba(96,192,240,.3);border-radius:6px;padding:10px;margin-bottom:10px;font-size:11px;color:#aaa;text-align:center;margin-top:-6px;" id="arrangeInfo">
   <h4 style="color:#60c0f0;margin-bottom:4px;">🔄 Arrange Mode Active</h4>
   <p style="margin:0;">Click position 1, then click position 2 to swap any two images. Click "Cancel Selection" to deselect.</p>
@@ -147,7 +148,7 @@ input[type=file]{display:none}
 </div>
 <div class="row2">
 <button class="btn sec" onclick="resetAll()">🔄 Reset</button>
-<button class="btn sec" onclick="clearAll()">🗑️ Clear</button>
+<button class="btn sec" onclick="clearAll()">🗑️ Clear All</button>
 </div>
 <div class="saved" id="saved">✓ Saved</div>
 </div>
@@ -217,7 +218,7 @@ function build(){
         let style_calc='translate('+set.panX+'%, '+set.panY+'%) scale('+set.zoom/100+')';
         html+='<div class="cell '+(selPos===pos?'sel':'')+(swapSrc===pos?'swap':'')+'" onclick="select('+pos+')" data-pos="'+pos+'"><div class="inner" style="background-image:url(\''+img.data+'\'); transform:'+style_calc+'"></div><span class="lbl">'+img.name+'</span><span class="pos">'+(idx+1)+'</span></div>';
       }else{
-        html+='<div class="cell" onclick="select('+pos+')" data-pos="'+pos+'"></div>';
+        html+='<div class="cell empty" onclick="select('+pos+')" data-pos="'+pos+'"></div>';
       }
       idx++;
     }
@@ -317,7 +318,11 @@ function select(pos){
       document.getElementById('panX').value=set.panX||0;
       document.getElementById('panY').value=set.panY||0;
       updSlider();
-      document.getElementById('info').innerHTML='<h4>Position '+parseInt(pos+1)+'</h4><p>Adjust zoom and pan</p>';
+      if(img){
+        document.getElementById('info').innerHTML='<h4>Position '+parseInt(pos+1)+'</h4><p>Adjust zoom and pan</p>';
+      }else{
+        document.getElementById('info').innerHTML='<h4>Position '+parseInt(pos+1)+' (Empty)</h4><p>👉 Click "➕ Add Images" to add a photo</p>';
+      }
     }
     build();
   }
