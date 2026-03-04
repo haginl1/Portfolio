@@ -21,6 +21,8 @@ h1{text-align:center;font-size:18px;font-weight:300;margin-bottom:4px}
 .cell.empty::before{content:'📷';font-size:24px;color:rgba(0,0,0,.2)}
 .cell.sel{box-shadow:0 0 0 3px #f0c060!important}
 .cell.swap{box-shadow:0 0 0 3px #60c0f0!important;opacity:.7}
+.cell.dragging{opacity:.5;cursor:grabbing}
+.cell.drag-over{box-shadow:inset 0 0 0 2px #10b981!important;background:rgba(16,185,129,.15)}
 .inner{position:absolute;top:4px;left:4px;right:4px;bottom:4px;background-size:cover;background-position:center;border-radius:1px}
 .lbl{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.7);padding:2px 5px;border-radius:3px;font-size:8px;color:#ddd;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pos{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);padding:1px 4px;border-radius:8px;font-size:8px;color:#aaa}
@@ -113,7 +115,7 @@ input[type=file]{display:none}
 <div class="info" id="info"><h4>� Click any tile</h4><p>Select a tile to add, edit, or delete images</p></div>
 <div style="display:none;background:rgba(96,192,240,.1);border:1px solid rgba(96,192,240,.3);border-radius:6px;padding:10px;margin-bottom:10px;font-size:11px;color:#aaa;text-align:center;margin-top:-6px;" id="arrangeInfo">
   <h4 style="color:#60c0f0;margin-bottom:4px;">🔄 Arrange Mode Active</h4>
-  <p style="margin:0;">Click position 1, then click position 2 to swap any two images. Click "Cancel Selection" to deselect.</p>
+  <p style="margin:0;"><strong>Drag and drop</strong> any image to swap positions. Or click position 1, then position 2 to swap.</p>
   <button class="btn sec" onclick="cancelSwap()" style="margin-top:8px;padding:8px;">✕ Cancel Selection</button>
   <p style="margin:4px 0 0 0;color:#888;font-size:9px;">Selected: <span id="swapStatus">Select first position</span></p>
 </div>
@@ -250,7 +252,69 @@ function build(){
   document.getElementById('grid').className='collage '+layout+' '+style;
   updCnt();
   updateImageList();
+  if(mode==='arrange')setupDragDrop();
 }
+
+let dragFromPos=null;
+
+function setupDragDrop(){
+  let cells=document.querySelectorAll('.cell');
+  cells.forEach(cell=>{
+    cell.draggable=true;
+    cell.addEventListener('dragstart',handleDragStart);
+    cell.addEventListener('dragover',handleDragOver);
+    cell.addEventListener('dragleave',handleDragLeave);
+    cell.addEventListener('drop',handleDrop);
+    cell.addEventListener('dragend',handleDragEnd);
+  });
+}
+
+function handleDragStart(e){
+  if(mode!=='arrange')return;
+  let pos=parseInt(e.currentTarget.dataset.pos);
+  dragFromPos=pos;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/html',e.currentTarget.innerHTML);
+}
+
+function handleDragOver(e){
+  if(mode!=='arrange'||dragFromPos===null)return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  e.currentTarget.classList.add('drag-over');
+}
+
+function handleDragLeave(e){
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function handleDrop(e){
+  if(mode!=='arrange'||dragFromPos===null)return;
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  let pos=parseInt(e.currentTarget.dataset.pos);
+  if(pos!==dragFromPos){
+    swapDirect(dragFromPos,pos);
+  }
+}
+
+function handleDragEnd(e){
+  e.currentTarget.classList.remove('dragging');
+  let cells=document.querySelectorAll('.cell');
+  cells.forEach(c=>c.classList.remove('drag-over'));
+  dragFromPos=null;
+}
+
+function swapDirect(from,to){
+  let tmp=order[from];
+  order[from]=order[to];
+  order[to]=tmp;
+  let tmpSet=settings[from];
+  settings[from]=settings[to];
+  settings[to]=tmpSet;
+  build();
+  save();
 
 function updateImageList(){
   let content='';
@@ -296,6 +360,7 @@ function setMode(m){
     document.getElementById('swapStatus').textContent='Select first position';
   }
   build();
+  if(m==='arrange')setupDragDrop();
 }
 
 function cancelSwap(){
