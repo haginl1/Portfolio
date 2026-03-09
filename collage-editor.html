@@ -13,10 +13,8 @@ h1{text-align:center;font-size:18px;font-weight:300;margin-bottom:4px}
 .container{max-width:1200px;margin:0 auto}
 @media(min-width:768px){.container{display:flex;gap:20px}.preview{flex:1}.controls{width:320px}}
 .frame{background:#0a0a0a;padding:8px;border-radius:8px;margin-bottom:12px}
-.collage{display:flex;flex-direction:column;gap:4px;padding:4px;aspect-ratio:20/16;background:var(--bg,#1f1c18)}
-.collage.p16x20{aspect-ratio:16/20}
-.collage.p8x10{aspect-ratio:8/10}
-.row{display:flex;gap:4px;flex:1}
+.collage{display:flex;flex-direction:column;padding:6px;background:var(--bg,#1f1c18)}
+.row{display:flex;flex:1}
 .cell{flex:1;position:relative;overflow:hidden;border-radius:2px;cursor:pointer;background:var(--mat,#f5f0e6);padding:4px;box-shadow:2px 2px 5px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
 .cell.empty::before{content:'📷';font-size:24px;color:rgba(0,0,0,.2)}
 .cell.sel{box-shadow:0 0 0 3px #f0c060!important}
@@ -26,10 +24,20 @@ h1{text-align:center;font-size:18px;font-weight:300;margin-bottom:4px}
 .inner{position:absolute;top:4px;left:4px;right:4px;bottom:4px;background-size:cover;background-position:center;border-radius:1px}
 .lbl{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.7);padding:2px 5px;border-radius:3px;font-size:8px;color:#ddd;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pos{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);padding:1px 4px;border-radius:8px;font-size:8px;color:#aaa}
+.resize-v{width:8px;flex-shrink:0;cursor:col-resize;display:flex;align-items:center;justify-content:center;opacity:.25;transition:opacity .2s;-webkit-user-select:none;user-select:none}
+.resize-v:hover{opacity:1}
+.resize-v::after{content:'';width:2px;height:28px;background:rgba(240,192,96,.7);border-radius:1px}
+.resize-h{height:8px;flex-shrink:0;cursor:row-resize;display:flex;align-items:center;justify-content:center;opacity:.25;transition:opacity .2s;-webkit-user-select:none;user-select:none}
+.resize-h:hover{opacity:1}
+.resize-h::after{content:'';height:2px;width:28px;background:rgba(240,192,96,.7);border-radius:1px}
 .natural .inner{filter:none}
 .mcm .inner{filter:saturate(.5) sepia(.15) contrast(1.05)}
 .bw .inner{filter:grayscale(1) contrast(1.2)}
 .warmbw .inner{filter:grayscale(1) sepia(.2) contrast(1.15)}
+.vintage .inner{filter:sepia(.4) saturate(.8) contrast(1.1) brightness(.95)}
+.cool .inner{filter:saturate(.85) hue-rotate(15deg) brightness(1.05) contrast(.95)}
+.hicon .inner{filter:contrast(1.4) saturate(1.1)}
+.fade .inner{filter:contrast(.8) saturate(.6) brightness(1.15)}
 .panel{background:rgba(255,255,255,.05);border-radius:8px;padding:12px;margin-bottom:10px}
 .panel h3{font-size:10px;text-transform:uppercase;color:#888;margin-bottom:8px;letter-spacing:1px}
 .info{background:rgba(240,192,96,.1);border:1px solid rgba(240,192,96,.3);border-radius:6px;padding:10px;margin-bottom:10px}
@@ -63,6 +71,10 @@ select,input[type=text]{width:100%;padding:10px;border:1px solid #444;border-rad
 .smcm{background:#5c5448;color:#ddd}
 .sbw{background:#555;color:#fff}
 .swbw{background:#5a5045;color:#ddd}
+.svintage{background:#6a5438;color:#ddd}
+.scool{background:#384a6a;color:#ddd}
+.shicon{background:#4a4a4a;color:#fff}
+.sfade{background:#5a5a5a;color:#ccc}
 .cnt{text-align:center;font-size:11px;color:#888;padding:6px}
 .cnt b{color:#f0c060}
 .saved{text-align:center;font-size:10px;color:#6a6;opacity:0;transition:opacity .3s}
@@ -83,19 +95,18 @@ input[type=file]{display:none}
 .img-info{flex:1;min-width:0;font-size:10px}
 .img-name{color:#ddd;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .img-pos{color:#888;font-size:9px;margin-top:2px}
-@media(max-width:768px){
 </style>
 </head>
 <body>
 <h1>COLLAGE EDITOR</h1>
-<p class="sub">Add photos • Arrange • Generate print directly</p>
+<p class="sub">Add photos &bull; Arrange &bull; Resize cells &bull; Generate print</p>
 
 <input type="file" id="repFile" accept="image/*">
 <input type="file" id="addFile" accept="image/*" multiple>
 <div class="container">
 <div class="preview">
-<div class="frame"><div class="collage warmbw" id="grid"></div></div>
-<div class="cnt" id="cnt"><b>8</b> images</div>
+<div class="frame"><div class="collage" id="grid"></div></div>
+<div class="cnt" id="cnt"><b>0</b> images</div>
 </div>
 <div class="controls">
 <button class="btn gen" onclick="generatePrint()">🖼️ Generate 300 DPI Print</button>
@@ -112,7 +123,7 @@ input[type=file]{display:none}
 <div class="mode on" id="mEdit" onclick="setMode('edit')">✏️ Edit</div>
 <div class="mode" id="mArr" onclick="setMode('arrange')">🔄 Arrange</div>
 </div>
-<div class="info" id="info"><h4>� Click any tile</h4><p>Select a tile to add, edit, or delete images</p></div>
+<div class="info" id="info"><h4>👆 Click any tile</h4><p>Select a tile to add, edit, or delete images</p></div>
 <div style="display:none;background:rgba(96,192,240,.1);border:1px solid rgba(96,192,240,.3);border-radius:6px;padding:10px;margin-bottom:10px;font-size:11px;color:#aaa;text-align:center;margin-top:-6px;" id="arrangeInfo">
   <h4 style="color:#60c0f0;margin-bottom:4px;">🔄 Arrange Mode Active</h4>
   <p style="margin:0;"><strong>Drag and drop</strong> any image to swap positions. Or click position 1, then position 2 to swap.</p>
@@ -134,18 +145,43 @@ input[type=file]{display:none}
 <div class="panel">
 <h3>Style</h3>
 <div class="chips">
-<span class="chip snat" onclick="setStyle('natural')">Natural</span>
-<span class="chip smcm" onclick="setStyle('mcm')">MCM</span>
-<span class="chip sbw" onclick="setStyle('bw')">B&W</span>
-<span class="chip swbw on" onclick="setStyle('warmbw')">Warm B&W</span>
+<span class="chip snat" id="chip-natural" onclick="setStyle('natural')">Natural</span>
+<span class="chip smcm" id="chip-mcm" onclick="setStyle('mcm')">MCM</span>
+<span class="chip sbw" id="chip-bw" onclick="setStyle('bw')">B&W</span>
+<span class="chip swbw" id="chip-warmbw" onclick="setStyle('warmbw')">Warm B&W</span>
+<span class="chip svintage" id="chip-vintage" onclick="setStyle('vintage')">Vintage</span>
+<span class="chip scool" id="chip-cool" onclick="setStyle('cool')">Cool</span>
+<span class="chip shicon" id="chip-hicon" onclick="setStyle('hicon')">Hi-Con</span>
+<span class="chip sfade" id="chip-fade" onclick="setStyle('fade')">Fade</span>
 </div>
 </div>
 <div class="panel">
-<h3>Layout</h3>
-<select id="layout" onchange="setLayout()">
-<option value="20x16">20×16 Landscape (6000×4800px)</option>
-<option value="16x20">16×20 Portrait (4800×6000px)</option>
-<option value="8x10">8×10 Portrait (2400×3000px)</option>
+<h3>Grid Layout</h3>
+<select id="gridSelect" onchange="setGrid()">
+<option value="1x1">1 × 1 (1 image)</option>
+<option value="1x2">1 × 2 (2 images)</option>
+<option value="2x1">2 × 1 (2 images)</option>
+<option value="2x2">2 × 2 (4 images)</option>
+<option value="2x3">2 × 3 (6 images)</option>
+<option value="3x2">3 × 2 (6 images)</option>
+<option value="3x3">3 × 3 (9 images)</option>
+<option value="3x4">3 × 4 (12 images)</option>
+<option value="4x3">4 × 3 (12 images)</option>
+<option value="4x4">4 × 4 (16 images)</option>
+<option value="5x4">5 × 4 (20 images)</option>
+</select>
+<button class="btn sec" onclick="resetSizes()" style="margin-top:6px;padding:8px;font-size:11px">↔ Reset Cell Sizes</button>
+</div>
+<div class="panel">
+<h3>Print Size</h3>
+<select id="printSelect" onchange="setPrintSize()">
+<option value="20x16">20×16 Landscape (6000×4800)</option>
+<option value="16x20">16×20 Portrait (4800×6000)</option>
+<option value="14x11">14×11 Landscape (4200×3300)</option>
+<option value="11x14">11×14 Portrait (3300×4200)</option>
+<option value="12x12">12×12 Square (3600×3600)</option>
+<option value="10x8">10×8 Landscape (3000×2400)</option>
+<option value="8x10">8×10 Portrait (2400×3000)</option>
 </select>
 </div>
 <div class="row2">
@@ -156,58 +192,99 @@ input[type=file]{display:none}
 </div>
 </div>
 <script>
-const defaultImages = [
+const defaultImages=[
   'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2224%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3EImage%3C/text%3E%3C/svg%3E'
 ];
-const KEY='collageV3';
-let imgs=[],order=[],settings=[],selPos=null,style='warmbw',layout='20x16',mode='edit',swapSrc=null,nextId=100,targetPos=null;
-let hiResImgs={};
+const KEY='collageV4';
+let imgs=[],order=[],settings=[],selPos=null,style='warmbw';
+let grid='4x4',printSize='20x16';
+let mode='edit',swapSrc=null,nextId=100,targetPos=null;
+let rowFlex=[],colFlex=[];
+let dragFromPos=null,resizing=null;
+
+function getGridConfig(){
+  let [r,c]=grid.split('x').map(Number);
+  return {rows:r,cols:c};
+}
+function getTotalCells(){
+  let cfg=getGridConfig();
+  return cfg.rows*cfg.cols;
+}
+
+function resetFlex(){
+  let cfg=getGridConfig();
+  rowFlex=[];
+  colFlex=[];
+  for(let r=0;r<cfg.rows;r++){
+    rowFlex.push(1);
+    colFlex.push([]);
+    for(let c=0;c<cfg.cols;c++) colFlex[r].push(1);
+  }
+}
+
+function ensureFlex(){
+  let cfg=getGridConfig();
+  while(rowFlex.length<cfg.rows) rowFlex.push(1);
+  while(rowFlex.length>cfg.rows) rowFlex.pop();
+  while(colFlex.length<cfg.rows) colFlex.push([]);
+  while(colFlex.length>cfg.rows) colFlex.pop();
+  for(let r=0;r<cfg.rows;r++){
+    if(!Array.isArray(colFlex[r])) colFlex[r]=[];
+    while(colFlex[r].length<cfg.cols) colFlex[r].push(1);
+    while(colFlex[r].length>cfg.cols) colFlex[r].pop();
+  }
+}
 
 function init(){
-  for(let i=0;i<8;i++){
+  let total=getTotalCells();
+  imgs=[];order=[];settings=[];
+  for(let i=0;i<total;i++){
     let id=nextId++;
     imgs.push({id,data:defaultImages[0],w:100,h:100,x:0,y:0,name:'Image '+(i+1)});
     order.push(id);
     settings.push({zoom:100,panX:0,panY:0});
   }
+  resetFlex();
 }
 
 function load(){
   let s=localStorage.getItem(KEY);
+  if(!s) s=localStorage.getItem('collageV3');
   if(s){
     let d=JSON.parse(s);
     imgs=d.imgs||[];
     order=d.order||[];
     settings=d.settings||[];
     style=d.style||'warmbw';
-    layout=d.layout||'20x16';
     nextId=d.nextId||100;
-    if(imgs.length===0)init();
+    if(d.grid){
+      grid=d.grid;
+      printSize=d.printSize||'20x16';
+    }else if(d.layout){
+      let map={'20x16':['4x4','20x16'],'16x20':['5x4','16x20'],'8x10':['3x3','8x10']};
+      let m=map[d.layout]||['4x4','20x16'];
+      grid=m[0];printSize=m[1];
+    }
+    rowFlex=d.rowFlex||[];
+    colFlex=d.colFlex||[];
+    if(imgs.length===0) init();
+    else ensureFlex();
   }else{
     init();
   }
 }
 
 function save(){
-  localStorage.setItem(KEY,JSON.stringify({imgs,order,settings,style,layout,nextId}));
-  document.getElementById('saved').classList.add('show');
-  setTimeout(()=>document.getElementById('saved').classList.remove('show'),1500);
+  localStorage.setItem(KEY,JSON.stringify({imgs,order,settings,style,grid,printSize,nextId,rowFlex,colFlex}));
+  localStorage.removeItem('collageV3');
+  let el=document.getElementById('saved');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1500);
 }
 
-function updCnt(){let filled=order.filter(x=>x!==null).length;document.getElementById('cnt').innerHTML='<b>'+filled+'</b>/'+order.length+' images';}
-
-function getRows(){
-  let config={
-    '20x16':{rows:4,cells:[4,4,4,4]},
-    '16x20':{rows:5,cells:[4,4,4,4,4]},
-    '8x10':{rows:3,cells:[3,3,3]}
-  };
-  return config[layout]||config['20x16'];
-}
-
-function getTotalCells(){
-  let cfg=getRows();
-  return cfg.cells.reduce((a,b)=>a+b,0);
+function updCnt(){
+  let filled=order.filter(x=>x!==null).length;
+  document.getElementById('cnt').innerHTML='<b>'+filled+'</b>/'+order.length+' images';
 }
 
 function ensureArrays(){
@@ -219,48 +296,149 @@ function ensureArrays(){
   while(order.length>total){
     let id=order.pop();
     settings.pop();
-    if(id!==null){
-      imgs=imgs.filter(x=>x.id!==id);
-    }
+    if(id!==null) imgs=imgs.filter(x=>x.id!==id);
   }
+  ensureFlex();
 }
 
 function build(){
   ensureArrays();
-  let cfg=getRows();
-  let html='<div class="collage '+layout+'" id="grid">';
+  let cfg=getGridConfig();
+  let [pw,ph]=printSize.split('x').map(Number);
+  let html='';
   let idx=0;
   for(let r=0;r<cfg.rows;r++){
-    html+='<div class="row">';
-    for(let c=0;c<cfg.cells[r];c++){
+    html+='<div class="row" style="flex:'+rowFlex[r]+'">';
+    for(let c=0;c<cfg.cols;c++){
       let pos=idx;
       let id=order[idx];
       let img=imgs.find(x=>x.id===id);
       let set=settings[idx]||{zoom:100,panX:0,panY:0};
+      let cls='cell';
+      if(!img) cls+=' empty';
+      if(selPos===pos) cls+=' sel';
+      if(swapSrc===pos) cls+=' swap';
       if(img){
-        let style_calc='translate('+set.panX+'%, '+set.panY+'%) scale('+set.zoom/100+')';
-        html+='<div class="cell '+(selPos===pos?'sel':'')+(swapSrc===pos?'swap':'')+'" onclick="select('+pos+')" data-pos="'+pos+'"><div class="inner" style="background-image:url(\''+img.data+'\'); transform:'+style_calc+'"></div><span class="lbl">'+img.name+'</span><span class="pos">'+(idx+1)+'</span></div>';
+        let tr='translate('+set.panX+'%,'+set.panY+'%) scale('+(set.zoom/100)+')';
+        html+='<div class="'+cls+'" style="flex:'+colFlex[r][c]+'" onclick="select('+pos+')" data-pos="'+pos+'" data-row="'+r+'" data-col="'+c+'" draggable="'+(mode==='arrange')+'">';
+        html+='<div class="inner" style="background-image:url(\''+img.data+'\');transform:'+tr+'"></div>';
+        html+='<span class="lbl">'+img.name+'</span>';
+        html+='<span class="pos">'+(idx+1)+'</span></div>';
       }else{
-        html+='<div class="cell empty" onclick="select('+pos+')" data-pos="'+pos+'"></div>';
+        html+='<div class="'+cls+'" style="flex:'+colFlex[r][c]+'" onclick="select('+pos+')" data-pos="'+pos+'" data-row="'+r+'" data-col="'+c+'" draggable="'+(mode==='arrange')+'">';
+        html+='<span class="pos">'+(idx+1)+'</span></div>';
       }
+      if(c<cfg.cols-1) html+='<div class="resize-v" data-row="'+r+'" data-col="'+c+'"></div>';
       idx++;
     }
     html+='</div>';
+    if(r<cfg.rows-1) html+='<div class="resize-h" data-row="'+r+'"></div>';
   }
-  html+='</div>';
-  document.getElementById('grid').parentElement.innerHTML=html;
-  document.getElementById('grid').className='collage '+layout+' '+style;
+  document.querySelector('.frame').innerHTML='<div class="collage '+style+'" id="grid" style="aspect-ratio:'+pw+'/'+ph+'">'+html+'</div>';
   updCnt();
   updateImageList();
-  if(mode==='arrange')setupDragDrop();
+  setupResizeHandlers();
+  if(mode==='arrange') setupDragDrop();
 }
 
-let dragFromPos=null;
+// === RESIZE HANDLES ===
+function setupResizeHandlers(){
+  document.querySelectorAll('.resize-v').forEach(el=>{
+    el.addEventListener('mousedown',e=>startResize(e,'v'));
+    el.addEventListener('touchstart',e=>startResize(e,'v'),{passive:false});
+  });
+  document.querySelectorAll('.resize-h').forEach(el=>{
+    el.addEventListener('mousedown',e=>startResize(e,'h'));
+    el.addEventListener('touchstart',e=>startResize(e,'h'),{passive:false});
+  });
+}
 
+function startResize(e,type){
+  e.preventDefault();
+  e.stopPropagation();
+  let touch=e.touches?e.touches[0]:e;
+  let el=e.currentTarget;
+  let r=parseInt(el.dataset.row);
+
+  if(type==='v'){
+    let c=parseInt(el.dataset.col);
+    let left=document.querySelector('.cell[data-row="'+r+'"][data-col="'+c+'"]');
+    let right=document.querySelector('.cell[data-row="'+r+'"][data-col="'+(c+1)+'"]');
+    if(!left||!right) return;
+    let lR=left.getBoundingClientRect();
+    let rR=right.getBoundingClientRect();
+    resizing={
+      type:'v',row:r,col:c,
+      startX:touch.clientX,
+      leftEl:left,rightEl:right,
+      totalPx:lR.width+rR.width,
+      startL:colFlex[r][c],startR:colFlex[r][c+1],
+      totalF:colFlex[r][c]+colFlex[r][c+1]
+    };
+  }else{
+    let rows=document.querySelectorAll('#grid > .row');
+    let top=rows[r],bot=rows[r+1];
+    if(!top||!bot) return;
+    let tR=top.getBoundingClientRect();
+    let bR=bot.getBoundingClientRect();
+    resizing={
+      type:'h',row:r,
+      startY:touch.clientY,
+      topEl:top,botEl:bot,
+      totalPx:tR.height+bR.height,
+      startT:rowFlex[r],startB:rowFlex[r+1],
+      totalF:rowFlex[r]+rowFlex[r+1]
+    };
+  }
+  document.addEventListener('mousemove',doResize);
+  document.addEventListener('mouseup',stopResize);
+  document.addEventListener('touchmove',doResize,{passive:false});
+  document.addEventListener('touchend',stopResize);
+}
+
+function doResize(e){
+  if(!resizing) return;
+  e.preventDefault();
+  let touch=e.touches?e.touches[0]:e;
+  let min=0.15;
+  if(resizing.type==='v'){
+    let dx=touch.clientX-resizing.startX;
+    let ratio=dx/resizing.totalPx;
+    let nL=resizing.startL+ratio*resizing.totalF;
+    let nR=resizing.startR-ratio*resizing.totalF;
+    nL=Math.max(min,Math.min(nL,resizing.totalF-min));
+    nR=resizing.totalF-nL;
+    colFlex[resizing.row][resizing.col]=nL;
+    colFlex[resizing.row][resizing.col+1]=nR;
+    resizing.leftEl.style.flex=nL;
+    resizing.rightEl.style.flex=nR;
+  }else{
+    let dy=touch.clientY-resizing.startY;
+    let ratio=dy/resizing.totalPx;
+    let nT=resizing.startT+ratio*resizing.totalF;
+    let nB=resizing.startB-ratio*resizing.totalF;
+    nT=Math.max(min,Math.min(nT,resizing.totalF-min));
+    nB=resizing.totalF-nT;
+    rowFlex[resizing.row]=nT;
+    rowFlex[resizing.row+1]=nB;
+    resizing.topEl.style.flex=nT;
+    resizing.botEl.style.flex=nB;
+  }
+}
+
+function stopResize(){
+  if(!resizing) return;
+  resizing=null;
+  document.removeEventListener('mousemove',doResize);
+  document.removeEventListener('mouseup',stopResize);
+  document.removeEventListener('touchmove',doResize);
+  document.removeEventListener('touchend',stopResize);
+  save();
+}
+
+// === DRAG & DROP (ARRANGE MODE) ===
 function setupDragDrop(){
-  let cells=document.querySelectorAll('.cell');
-  cells.forEach(cell=>{
-    cell.draggable=true;
+  document.querySelectorAll('.cell').forEach(cell=>{
     cell.addEventListener('dragstart',handleDragStart);
     cell.addEventListener('dragover',handleDragOver);
     cell.addEventListener('dragleave',handleDragLeave);
@@ -268,55 +446,39 @@ function setupDragDrop(){
     cell.addEventListener('dragend',handleDragEnd);
   });
 }
-
 function handleDragStart(e){
-  if(mode!=='arrange')return;
-  let pos=parseInt(e.currentTarget.dataset.pos);
-  dragFromPos=pos;
+  if(mode!=='arrange') return;
+  dragFromPos=parseInt(e.currentTarget.dataset.pos);
   e.currentTarget.classList.add('dragging');
   e.dataTransfer.effectAllowed='move';
   e.dataTransfer.setData('text/html',e.currentTarget.innerHTML);
 }
-
 function handleDragOver(e){
-  if(mode!=='arrange'||dragFromPos===null)return;
+  if(mode!=='arrange'||dragFromPos===null) return;
   e.preventDefault();
   e.dataTransfer.dropEffect='move';
   e.currentTarget.classList.add('drag-over');
 }
-
-function handleDragLeave(e){
-  e.currentTarget.classList.remove('drag-over');
-}
-
+function handleDragLeave(e){e.currentTarget.classList.remove('drag-over');}
 function handleDrop(e){
-  if(mode!=='arrange'||dragFromPos===null)return;
+  if(mode!=='arrange'||dragFromPos===null) return;
   e.preventDefault();
   e.currentTarget.classList.remove('drag-over');
   let pos=parseInt(e.currentTarget.dataset.pos);
-  if(pos!==dragFromPos){
-    swapDirect(dragFromPos,pos);
-  }
+  if(pos!==dragFromPos) swapDirect(dragFromPos,pos);
 }
-
 function handleDragEnd(e){
   e.currentTarget.classList.remove('dragging');
-  let cells=document.querySelectorAll('.cell');
-  cells.forEach(c=>c.classList.remove('drag-over'));
+  document.querySelectorAll('.cell').forEach(c=>c.classList.remove('drag-over'));
   dragFromPos=null;
 }
-
 function swapDirect(from,to){
-  let tmp=order[from];
-  order[from]=order[to];
-  order[to]=tmp;
-  let tmpSet=settings[from];
-  settings[from]=settings[to];
-  settings[to]=tmpSet;
-  build();
-  save();
+  let tmp=order[from];order[from]=order[to];order[to]=tmp;
+  let tmpS=settings[from];settings[from]=settings[to];settings[to]=tmpS;
+  build();save();
 }
 
+// === IMAGE LIST ===
 function updateImageList(){
   let content='';
   if(imgs.length===0){
@@ -326,34 +488,32 @@ function updateImageList(){
       let posIdx=order.indexOf(img.id);
       let posStr=posIdx>=0?'Pos '+(posIdx+1):'Unplaced';
       let posColor=posIdx>=0?'#f0c060':'#f04040';
-      content+='<div class="img-item '+(selPos!==null && order[selPos]===img.id?'sel':'')+'" onclick="selectFromList(\''+img.id+'\')"><div class="img-thumb"><img src="'+img.data+'" alt="'+img.name+'"></div><div class="img-info"><div class="img-name">'+img.name+'</div><div class="img-pos" style="color:'+posColor+'">'+posStr+'</div></div></div>';
+      content+='<div class="img-item '+(selPos!==null&&order[selPos]===img.id?'sel':'')+'" onclick="selectFromList('+img.id+')">';
+      content+='<div class="img-thumb"><img src="'+img.data+'" alt="'+img.name+'"></div>';
+      content+='<div class="img-info"><div class="img-name">'+img.name+'</div>';
+      content+='<div class="img-pos" style="color:'+posColor+'">'+posStr+'</div></div></div>';
     });
   }
   document.getElementById('imgListContent').innerHTML=content;
 }
-
 function selectFromList(imgId){
   let posIdx=order.indexOf(imgId);
-  if(posIdx>=0){
-    select(posIdx);
-  }
+  if(posIdx>=0) select(posIdx);
 }
 
+// === MODE SWITCHING ===
 function setMode(m){
   mode=m;
-  let edit=document.getElementById('mEdit');
-  let arr=document.getElementById('mArr');
   if(m==='edit'){
-    edit.classList.add('on');
-    arr.classList.remove('on');
+    document.getElementById('mEdit').classList.add('on');
+    document.getElementById('mArr').classList.remove('on');
     document.getElementById('edits').style.display='block';
     document.getElementById('info').style.display='block';
     document.getElementById('arrangeInfo').style.display='none';
-    selPos=null;
-    swapSrc=null;
+    selPos=null;swapSrc=null;
   }else{
-    edit.classList.remove('on');
-    arr.classList.add('on');
+    document.getElementById('mEdit').classList.remove('on');
+    document.getElementById('mArr').classList.add('on');
     document.getElementById('edits').style.display='none';
     document.getElementById('info').style.display='none';
     document.getElementById('arrangeInfo').style.display='block';
@@ -361,105 +521,86 @@ function setMode(m){
     document.getElementById('swapStatus').textContent='Select first position';
   }
   build();
-  if(m==='arrange')setupDragDrop();
 }
-
 function cancelSwap(){
   swapSrc=null;
   document.getElementById('swapStatus').textContent='Select first position';
   build();
 }
 
-function swap(pos){
-  if(swapSrc===null)return;
-  let tmp=order[swapSrc];
-  order[swapSrc]=order[pos];
-  order[pos]=tmp;
-  swapSrc=null;
-  document.getElementById('swapStatus').textContent='Select first position';
-  build();
-  save();
-}
-
+// === SELECTION & SWAP ===
 function select(pos){
   if(mode==='arrange'){
     if(swapSrc===null){
       swapSrc=pos;
-      document.getElementById('swapStatus').textContent='Position '+(pos+1)+' selected • Now select position to swap';
+      document.getElementById('swapStatus').textContent='Position '+(pos+1)+' selected \u2022 Now select position to swap';
     }else if(swapSrc===pos){
       swapSrc=null;
       document.getElementById('swapStatus').textContent='Select first position';
     }else{
-      swap(pos);
+      let tmp=order[swapSrc];order[swapSrc]=order[pos];order[pos]=tmp;
+      swapSrc=null;
       document.getElementById('swapStatus').textContent='Select first position';
+      save();
     }
     build();
   }else{
     selPos=pos;
-    if(pos<order.length){
-      let id=order[pos];
-      let set=settings[pos]||{};
-      let img=imgs.find(x=>x.id===id);
-      document.getElementById('name').value=img?img.name:'';
-      document.getElementById('zoom').value=set.zoom||100;
-      document.getElementById('panX').value=set.panX||0;
-      document.getElementById('panY').value=set.panY||0;
-      updSlider();
-      if(img){
-        document.getElementById('info').innerHTML='<h4>Position '+parseInt(pos+1)+'</h4><p>Adjust zoom and pan</p>';
-      }else{
-        document.getElementById('info').innerHTML='<h4>Position '+parseInt(pos+1)+' (Empty)</h4><p>👉 Click "➕ Add Images" to add a photo</p>';
-      }
+    let id=order[pos];
+    let set=settings[pos]||{};
+    let img=imgs.find(x=>x.id===id);
+    document.getElementById('name').value=img?img.name:'';
+    document.getElementById('zoom').value=set.zoom||100;
+    document.getElementById('panX').value=set.panX||0;
+    document.getElementById('panY').value=set.panY||0;
+    updSlider();
+    if(img){
+      document.getElementById('info').innerHTML='<h4>Position '+(pos+1)+'</h4><p>Adjust zoom and pan. Drag cell borders to resize.</p>';
+    }else{
+      document.getElementById('info').innerHTML='<h4>Position '+(pos+1)+' (Empty)</h4><p>👉 Click "➕ Add Images" to add a photo</p>';
     }
     build();
   }
 }
 
+// === SLIDERS ===
 function updSlider(){
-  if(selPos===null)return;
-  let zoom=document.getElementById('zoom').value;
-  let panX=document.getElementById('panX').value;
-  let panY=document.getElementById('panY').value;
-  document.getElementById('zoomV').textContent=zoom+'%';
-  document.getElementById('panXV').textContent=panX+'%';
-  document.getElementById('panYV').textContent=panY+'%';
-  if(!settings[selPos])settings[selPos]={};
-  settings[selPos]={zoom:parseInt(zoom),panX:parseInt(panX),panY:parseInt(panY)};
-  build();
-  save();
+  if(selPos===null) return;
+  let z=document.getElementById('zoom').value;
+  let px=document.getElementById('panX').value;
+  let py=document.getElementById('panY').value;
+  document.getElementById('zoomV').textContent=z+'%';
+  document.getElementById('panXV').textContent=px+'%';
+  document.getElementById('panYV').textContent=py+'%';
+  settings[selPos]={zoom:parseInt(z),panX:parseInt(px),panY:parseInt(py)};
+  build();save();
 }
-
 function rename(){
-  if(selPos===null)return;
+  if(selPos===null) return;
   let id=order[selPos];
   let img=imgs.find(x=>x.id===id);
-  if(img)img.name=document.getElementById('name').value;
-  build();
-  save();
+  if(img) img.name=document.getElementById('name').value;
+  build();save();
 }
 
+// === FILE HANDLING ===
 function repClick(){if(selPos===null){alert('Tap an image first');return;}document.getElementById('repFile').click();}
 function addClick(){
-  if(selPos===null){
-    alert('Select a position first');
-    return;
-  }
+  if(selPos===null){alert('Select a position first');return;}
   targetPos=selPos;
   document.getElementById('addFile').click();
 }
-
-function processImg(file,cb,forHiRes=false){
+function processImg(file,cb,forHiRes){
   let reader=new FileReader();
   reader.onload=function(e){
     let img=new Image();
     img.onload=function(){
       let c=document.createElement('canvas');
-      let sz=forHiRes?forHiRes:300;
+      let sz=forHiRes||300;
       c.width=c.height=sz;
       let ctx=c.getContext('2d');
       let minD=Math.min(img.width,img.height);
-      let sx=(img.width-minD)/2;
-      let sy=(img.height-minD)/2;
+      let sx=(img.width-minD)/2,sy=(img.height-minD)/2;
       ctx.drawImage(img,sx,sy,minD,minD,0,0,sz,sz);
       cb(c.toDataURL());
     };
@@ -467,23 +608,17 @@ function processImg(file,cb,forHiRes=false){
   };
   reader.readAsDataURL(file);
 }
-
 document.getElementById('repFile').onchange=function(e){
-  if(selPos===null)return;
+  if(selPos===null) return;
   let file=e.currentTarget.files[0];
-  if(!file)return;
+  if(!file) return;
   processImg(file,function(dataUrl){
     let id=order[selPos];
     let img=imgs.find(x=>x.id===id);
-    if(img){
-      img.data=dataUrl;
-      save();
-      build();
-    }
+    if(img){img.data=dataUrl;save();build();}
   });
   e.currentTarget.value='';
 };
-
 document.getElementById('addFile').onchange=function(e){
   let files=Array.from(e.currentTarget.files);
   let cnt=0;
@@ -496,130 +631,118 @@ document.getElementById('addFile').onchange=function(e){
         if(pos<order.length){
           let oldId=order[pos];
           order[pos]=id;
-          if(oldId!==null){
-            imgs=imgs.filter(x=>x.id!==oldId);
-          }
+          if(oldId!==null) imgs=imgs.filter(x=>x.id!==oldId);
         }
         cnt++;
-        if(cnt===files.length){
-          targetPos=null;
-          selPos=null;
-          save();
-          build();
-        }
+        if(cnt===files.length){targetPos=null;selPos=null;save();build();}
       });
     });
   }
   e.currentTarget.value='';
 };
-
 function delImg(){
-  if(selPos===null)return;
+  if(selPos===null) return;
   let id=order[selPos];
   order.splice(selPos,1);
   settings.splice(selPos,1);
   imgs=imgs.filter(x=>x.id!==id);
-  selPos=null;
-  build();
-  save();
+  selPos=null;build();save();
 }
-
 function resetOne(){
-  if(selPos===null)return;
+  if(selPos===null) return;
   settings[selPos]={zoom:100,panX:0,panY:0};
-  build();
-  save();
+  build();save();
 }
 
+// === STYLE / LAYOUT ===
 function setStyle(s){
   style=s;
-  let chips=document.querySelectorAll('.chip');
-  chips.forEach(c=>c.classList.remove('on'));
-  event.target.classList.add('on');
-  build();
-  save();
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  document.getElementById('chip-'+s).classList.add('on');
+  build();save();
 }
-
-function setLayout(){layout=document.getElementById('layout').value;build();save();}
-
+function setGrid(){
+  grid=document.getElementById('gridSelect').value;
+  resetFlex();
+  build();save();
+}
+function setPrintSize(){
+  printSize=document.getElementById('printSelect').value;
+  build();save();
+}
+function resetSizes(){
+  resetFlex();build();save();
+}
 function resetAll(){
   imgs.forEach(img=>img.data=defaultImages[0]);
-  order.forEach((id,i)=>settings[i]={zoom:100,panX:0,panY:0});
-  build();
-  save();
+  order.forEach((_,i)=>settings[i]={zoom:100,panX:0,panY:0});
+  resetFlex();build();save();
 }
-
 function clearAll(){
-  if(!confirm('Clear all images?'))return;
-  imgs=[];
-  order=[];
-  settings=[];
-  selPos=null;
-  init();
-  build();
-  save();
+  if(!confirm('Clear all images?')) return;
+  imgs=[];order=[];settings=[];selPos=null;
+  init();build();save();
 }
 
 // === PRINT GENERATION ===
 async function generatePrint(){
-  let cfg=getRows();
+  let cfg=getGridConfig();
   let dpi=300;
-  let [w,h]=layout==='20x16'?[20,16]:layout==='16x20'?[16,20]:[8,10];
+  let [w,h]=printSize.split('x').map(Number);
   let [pw,ph]=[w*dpi,h*dpi];
-  
+
   document.getElementById('progress').classList.add('show');
-  
+
   let canvas=document.createElement('canvas');
-  canvas.width=pw;
-  canvas.height=ph;
+  canvas.width=pw;canvas.height=ph;
   let ctx=canvas.getContext('2d',{willReadFrequently:true});
   ctx.fillStyle='#1f1c18';
   ctx.fillRect(0,0,pw,ph);
-  
-  let gap=Math.round(0.1*dpi);
-  let cellW=(pw-gap*5)/4;
-  let cellH=(ph-gap*(cfg.rows+1))/cfg.rows;
-  
-  let idx=0;
-  let totalCells=order.length;
-  let processedCells=0;
-  
+
+  let gap=Math.round(0.08*dpi);
+  let pad=gap;
+
+  let totalRF=rowFlex.reduce((a,b)=>a+b,0);
+  let availH=ph-pad*2-gap*(cfg.rows-1);
+  let rH=rowFlex.map(f=>(f/totalRF)*availH);
+
+  let idx=0,totalCells=getTotalCells(),processed=0;
+  let cy=pad;
+
   for(let r=0;r<cfg.rows;r++){
-    for(let c=0;c<cfg.cells[r];c++){
-      let pos=r*10+c;
+    let totalCF=colFlex[r].reduce((a,b)=>a+b,0);
+    let availW=pw-pad*2-gap*(cfg.cols-1);
+    let cW=colFlex[r].map(f=>(f/totalCF)*availW);
+    let cx=pad;
+
+    for(let c=0;c<cfg.cols;c++){
+      let cellW=cW[c],cellH=rH[r];
+      ctx.fillStyle='#f5f0e6';
+      ctx.fillRect(cx,cy,cellW,cellH);
+
       let id=order[idx];
       let img=imgs.find(x=>x.id===id);
       let set=settings[idx]||{zoom:100,panX:0,panY:0};
-      
-      let x=gap+(c%4)*(cellW+gap);
-      let y=gap+(r)*(cellH+gap);
-      
-      ctx.fillStyle='#f5f0e6';
-      ctx.fillRect(x,y,cellW,cellH);
-      
+
       if(img){
-        let loadedImg=await loadImage(img.data);
-        drawStyledImage(ctx,loadedImg,x,y,cellW,cellH,style,set);
+        let loaded=await loadImage(img.data);
+        drawStyledImage(ctx,loaded,cx,cy,cellW,cellH,style,set);
       }
-      
-      processedCells++;
-      let pct=(processedCells/totalCells)*100;
-      document.getElementById('progressFill').style.width=pct+'%';
-      
+
+      processed++;
+      document.getElementById('progressFill').style.width=(processed/totalCells*100)+'%';
+      cx+=cellW+gap;
       idx++;
     }
+    cy+=rH[r]+gap;
   }
-  
+
   canvas.toBlob(blob=>{
     let url=URL.createObjectURL(blob);
     let a=document.createElement('a');
-    a.href=url;
-    a.download='collage-300dpi-'+Date.now()+'.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href=url;a.download='collage-300dpi-'+Date.now()+'.png';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
     document.getElementById('progress').classList.remove('show');
   },'image/png');
 }
@@ -634,40 +757,41 @@ function loadImage(src){
   });
 }
 
-function drawStyledImage(ctx,img,x,y,w,h,style,set){
+function drawStyledImage(ctx,img,x,y,w,h,st,set){
   ctx.save();
   let zoom=set.zoom/100;
-  let offsetX=(set.panX/100)*(w/4);
-  let offsetY=(set.panY/100)*(h/4);
-  ctx.beginPath();
-  ctx.rect(x,y,w,h);
-  ctx.clip();
-  
+  let offX=(set.panX/100)*(w/4);
+  let offY=(set.panY/100)*(h/4);
+  ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+
   let minD=Math.min(img.width,img.height);
-  let sx=(img.width-minD)/2;
-  let sy=(img.height-minD)/2;
-  
+  let sx=(img.width-minD)/2,sy=(img.height-minD)/2;
   let sz=Math.max(w,h)*zoom;
-  let dx=x+w/2-sz/2+offsetX;
-  let dy=y+h/2-sz/2+offsetY;
-  
-  if(style==='natural'){
-    ctx.drawImage(img,sx,sy,minD,minD,dx,dy,sz,sz);
-  }else if(style==='mcm'){
-    ctx.filter='saturate(0.5) sepia(0.15) contrast(1.05)';
-    ctx.drawImage(img,sx,sy,minD,minD,dx,dy,sz,sz);
-  }else if(style==='bw'){
-    ctx.filter='grayscale(1) contrast(1.2)';
-    ctx.drawImage(img,sx,sy,minD,minD,dx,dy,sz,sz);
-  }else if(style==='warmbw'){
-    ctx.filter='grayscale(1) sepia(0.2) contrast(1.15)';
-    ctx.drawImage(img,sx,sy,minD,minD,dx,dy,sz,sz);
-  }
-  
+  let dx=x+w/2-sz/2+offX,dy=y+h/2-sz/2+offY;
+
+  let filters={
+    natural:'none',
+    mcm:'saturate(0.5) sepia(0.15) contrast(1.05)',
+    bw:'grayscale(1) contrast(1.2)',
+    warmbw:'grayscale(1) sepia(0.2) contrast(1.15)',
+    vintage:'sepia(0.4) saturate(0.8) contrast(1.1) brightness(0.95)',
+    cool:'saturate(0.85) hue-rotate(15deg) brightness(1.05) contrast(0.95)',
+    hicon:'contrast(1.4) saturate(1.1)',
+    fade:'contrast(0.8) saturate(0.6) brightness(1.15)'
+  };
+  ctx.filter=filters[st]||'none';
+  ctx.drawImage(img,sx,sy,minD,minD,dx,dy,sz,sz);
   ctx.restore();
 }
 
-load();build();
+// === BOOT ===
+load();
+document.getElementById('gridSelect').value=grid;
+document.getElementById('printSelect').value=printSize;
+document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+let chipEl=document.getElementById('chip-'+style);
+if(chipEl) chipEl.classList.add('on');
+build();
 </script>
 </body>
 </html>
