@@ -1,0 +1,18 @@
+{
+  "name": "Collage Editor",
+  "short_name": "Collage",
+  "description": "Add photos, arrange, resize cells, and generate high-quality prints",
+  "start_url": "./collage-editor.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "collage-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

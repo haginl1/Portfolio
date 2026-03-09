@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="manifest" href="collage-manifest.json">
+<link rel="apple-touch-icon" href="images/collage-icon-180.png">
 <title>Collage Editor</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -782,6 +786,11 @@ function drawStyledImage(ctx,img,x,y,w,h,st,set){
   ctx.filter=filters[st]||'none';
   ctx.drawImage(img,sx,sy,minD,minD,dx,dy,sz,sz);
   ctx.restore();
+}
+
+// === PWA ===
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./collage-sw.js').catch(()=>{});
 }
 
 // === BOOT ===
