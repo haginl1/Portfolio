@@ -330,25 +330,25 @@ let rowFlex=[],colFlex=[];
 let dragFromPos=null,resizing=null;
 
 const cardPresets={
-  'xmas-single':{grid:'1x1',print:'5x7',rowFlex:[1],colFlex:[[1]]},
-  'xmas-duo':{grid:'1x2',print:'5x7',rowFlex:[1],colFlex:[[1,1]]},
-  'xmas-feature':{grid:'2x2',print:'5x7',rowFlex:[1.8,1],colFlex:[[1,1],[1,1]]},
-  'xmas-classic':{grid:'2x2',print:'5x7',rowFlex:[1,1],colFlex:[[1,1],[1,1]]},
-  'xmas-top':{grid:'2x3',print:'5x7',rowFlex:[1.6,1],colFlex:[[1,1,1],[1,1,1]]},
-  'xmas-strip':{grid:'4x1',print:'5x7',rowFlex:[1,1,1,1],colFlex:[[1],[1],[1],[1]]},
-  'xmas-five':{grid:'3x2',print:'5x7',rowFlex:[1,1.4,1],colFlex:[[1,1],[1,1],[1,1]]},
-  'xmas-msg-top1':{grid:'2x1',print:'5x7',rowFlex:[0.6,1.4],colFlex:[[1],[1]],msgRow:0},
-  'xmas-msg-bot1':{grid:'2x1',print:'5x7',rowFlex:[1.4,0.6],colFlex:[[1],[1]],msgRow:1},
-  'xmas-msg-top2':{grid:'2x2',print:'5x7',rowFlex:[0.5,1],colFlex:[[1,1],[1,1]],msgRow:0},
-  'xmas-msg-bot2':{grid:'2x2',print:'5x7',rowFlex:[1,0.5],colFlex:[[1,1],[1,1]],msgRow:1},
-  'xmas-msg-top3':{grid:'2x3',print:'5x7',rowFlex:[0.5,1],colFlex:[[1,1,1],[1,1,1]],msgRow:0},
-  'xmas-msg-mid':{grid:'3x2',print:'5x7',rowFlex:[1,0.5,1],colFlex:[[1,1],[1,1],[1,1]],msgRow:1},
-  'xmas-msg-left1':{grid:'1x2',print:'5x7',rowFlex:[1],colFlex:[[0.8,1.2]],msgCol:0},
-  'xmas-msg-right1':{grid:'1x2',print:'5x7',rowFlex:[1],colFlex:[[1.2,0.8]],msgCol:1},
-  'xmas-msg-left2':{grid:'2x2',print:'5x7',rowFlex:[1,1],colFlex:[[0.8,1.2],[0.8,1.2]],msgCol:0},
-  'xmas-msg-right2':{grid:'2x2',print:'5x7',rowFlex:[1,1],colFlex:[[1.2,0.8],[1.2,0.8]],msgCol:1},
-  'xmas-msg-topbot':{grid:'3x1',print:'5x7',rowFlex:[0.4,1.2,0.4],colFlex:[[1],[1],[1]],msgRow:0,msgRow2:2},
-  'xmas-msg-left3':{grid:'3x2',print:'5x7',rowFlex:[1,1,1],colFlex:[[0.7,1.3],[0.7,1.3],[0.7,1.3]],msgCol:0}
+  'xmas-single':{grid:'1x1',print:'7x5',rowFlex:[1],colFlex:[[1]]},
+  'xmas-duo':{grid:'1x2',print:'7x5',rowFlex:[1],colFlex:[[1,1]]},
+  'xmas-feature':{grid:'2x2',print:'7x5',rowFlex:[1.8,1],colFlex:[[1,1],[1,1]]},
+  'xmas-classic':{grid:'2x2',print:'7x5',rowFlex:[1,1],colFlex:[[1,1],[1,1]]},
+  'xmas-top':{grid:'2x3',print:'7x5',rowFlex:[1.6,1],colFlex:[[1,1,1],[1,1,1]]},
+  'xmas-strip':{grid:'4x1',print:'7x5',rowFlex:[1,1,1,1],colFlex:[[1],[1],[1],[1]]},
+  'xmas-five':{grid:'3x2',print:'7x5',rowFlex:[1,1.4,1],colFlex:[[1,1],[1,1],[1,1]]},
+  'xmas-msg-top1':{grid:'2x1',print:'7x5',rowFlex:[0.6,1.4],colFlex:[[1],[1]],msgRow:0},
+  'xmas-msg-bot1':{grid:'2x1',print:'7x5',rowFlex:[1.4,0.6],colFlex:[[1],[1]],msgRow:1},
+  'xmas-msg-top2':{grid:'2x2',print:'7x5',rowFlex:[0.5,1],colFlex:[[1,1],[1,1]],msgRow:0},
+  'xmas-msg-bot2':{grid:'2x2',print:'7x5',rowFlex:[1,0.5],colFlex:[[1,1],[1,1]],msgRow:1},
+  'xmas-msg-top3':{grid:'2x3',print:'7x5',rowFlex:[0.5,1],colFlex:[[1,1,1],[1,1,1]],msgRow:0},
+  'xmas-msg-mid':{grid:'3x2',print:'7x5',rowFlex:[1,0.5,1],colFlex:[[1,1],[1,1],[1,1]],msgRow:1},
+  'xmas-msg-left1':{grid:'1x2',print:'7x5',rowFlex:[1],colFlex:[[0.8,1.2]],msgCol:0},
+  'xmas-msg-right1':{grid:'1x2',print:'7x5',rowFlex:[1],colFlex:[[1.2,0.8]],msgCol:1},
+  'xmas-msg-left2':{grid:'2x2',print:'7x5',rowFlex:[1,1],colFlex:[[0.8,1.2],[0.8,1.2]],msgCol:0},
+  'xmas-msg-right2':{grid:'2x2',print:'7x5',rowFlex:[1,1],colFlex:[[1.2,0.8],[1.2,0.8]],msgCol:1},
+  'xmas-msg-topbot':{grid:'3x1',print:'7x5',rowFlex:[0.4,1.2,0.4],colFlex:[[1],[1],[1]],msgRow:0,msgRow2:2},
+  'xmas-msg-left3':{grid:'3x2',print:'7x5',rowFlex:[1,1,1],colFlex:[[0.7,1.3],[0.7,1.3],[0.7,1.3]],msgCol:0}
 };
 let activePreset=null;
 let cardMsg='',cardFont='Georgia, serif',cardSize=28,cardColor='#fff',cardPos='bottom';
