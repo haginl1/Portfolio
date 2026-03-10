@@ -249,6 +249,7 @@ input[type=file]{display:none}
 <span class="gfx-toggle" onclick="toggleGfx('stars')">Stars</span>
 <span class="gfx-toggle" onclick="toggleGfx('ornaments')">Ornaments</span>
 <span class="gfx-toggle" onclick="toggleGfx('border')">Gold Border</span>
+<span class="gfx-toggle" onclick="toggleGfx('dots')">Gold Dots</span>
 </div>
 </div>
 </div>
@@ -288,6 +289,14 @@ input[type=file]{display:none}
 <option value="xmas-msg-right2">2 Photos + Message Right</option>
 <option value="xmas-msg-topbot">Message Top + Photo + Message Bottom</option>
 <option value="xmas-msg-left3">Message Left + 3 Photos</option>
+<option value="xmas-msg-center4">4 Photos + Center Message</option>
+<option value="xmas-msg-center6">6 Photos + Center Message</option>
+<option disabled>── Message in Cell ──</option>
+<option value="xmas-cell-tl">Message Top-Left + 3 Photos</option>
+<option value="xmas-cell-tr">Message Top-Right + 3 Photos</option>
+<option value="xmas-cell-bl">Message Bottom-Left + 3 Photos</option>
+<option value="xmas-cell-br">Message Bottom-Right + 3 Photos</option>
+<option value="xmas-cell-bl5">Message Bottom-Left + 5 Photos</option>
 </select>
 <button class="btn sec" onclick="resetSizes()" style="margin-top:6px;padding:8px;font-size:11px">↔ Reset Cell Sizes</button>
 </div>
@@ -348,11 +357,18 @@ const cardPresets={
   'xmas-msg-left2':{grid:'2x2',print:'7x5',rowFlex:[1,1],colFlex:[[0.8,1.2],[0.8,1.2]],msgCol:0},
   'xmas-msg-right2':{grid:'2x2',print:'7x5',rowFlex:[1,1],colFlex:[[1.2,0.8],[1.2,0.8]],msgCol:1},
   'xmas-msg-topbot':{grid:'3x1',print:'7x5',rowFlex:[0.4,1.2,0.4],colFlex:[[1],[1],[1]],msgRow:0,msgRow2:2},
-  'xmas-msg-left3':{grid:'3x2',print:'7x5',rowFlex:[1,1,1],colFlex:[[0.7,1.3],[0.7,1.3],[0.7,1.3]],msgCol:0}
+  'xmas-msg-left3':{grid:'3x2',print:'7x5',rowFlex:[1,1,1],colFlex:[[0.7,1.3],[0.7,1.3],[0.7,1.3]],msgCol:0},
+  'xmas-msg-center4':{grid:'2x3',print:'7x5',rowFlex:[1,1],colFlex:[[1,1,1],[1,1,1]],msgCol:1},
+  'xmas-msg-center6':{grid:'3x3',print:'7x5',rowFlex:[1,1.2,1],colFlex:[[1,1,1],[1,1,1],[1,1,1]],msgCol:1},
+  'xmas-cell-bl':{grid:'2x2',print:'7x5',rowFlex:[1.2,0.8],colFlex:[[1,1],[1,1]],msgCells:[[1,0]]},
+  'xmas-cell-br':{grid:'2x2',print:'7x5',rowFlex:[1.2,0.8],colFlex:[[1,1],[1,1]],msgCells:[[1,1]]},
+  'xmas-cell-bl5':{grid:'2x3',print:'7x5',rowFlex:[1,1],colFlex:[[1,1,1],[1,1,1]],msgCells:[[1,0]]},
+  'xmas-cell-tl':{grid:'2x2',print:'7x5',rowFlex:[0.8,1.2],colFlex:[[1,1],[1,1]],msgCells:[[0,0]]},
+  'xmas-cell-tr':{grid:'2x2',print:'7x5',rowFlex:[0.8,1.2],colFlex:[[1,1],[1,1]],msgCells:[[0,1]]}
 };
 let activePreset=null;
 let cardMsg='',cardFont='Georgia, serif',cardSize=28,cardColor='#fff',cardPos='bottom';
-let cardGfx={snowflakes:false,holly:false,stars:false,ornaments:false,border:false};
+let cardGfx={snowflakes:false,holly:false,stars:false,ornaments:false,border:false,dots:false};
 
 function getGridConfig(){
   let [r,c]=grid.split('x').map(Number);
@@ -370,6 +386,13 @@ function getMsgCol(){
   if(activePreset&&cardPresets[activePreset]&&cardPresets[activePreset].msgCol!==undefined) return cardPresets[activePreset].msgCol;
   return -1;
 }
+function getMsgCells(){
+  if(activePreset&&cardPresets[activePreset]&&cardPresets[activePreset].msgCells) return cardPresets[activePreset].msgCells;
+  return [];
+}
+function isMsgCell(r,c){
+  return getMsgCells().some(function(mc){return mc[0]===r&&mc[1]===c;});
+}
 function getTotalCells(){
   let cfg=getGridConfig();
   let total=cfg.rows*cfg.cols;
@@ -377,6 +400,7 @@ function getTotalCells(){
   if(mr>=0) total-=cfg.cols;
   if(mr2>=0) total-=cfg.cols;
   if(mc>=0) total-=cfg.rows-(mr>=0?1:0)-(mr2>=0?1:0);
+  total-=getMsgCells().length;
   return total;
 }
 
@@ -442,7 +466,8 @@ function load(){
     cardSize=d.cardSize||28;
     cardColor=d.cardColor||'#fff';
     cardPos=d.cardPos||'bottom';
-    cardGfx=d.cardGfx||{snowflakes:false,holly:false,stars:false,ornaments:false,border:false};
+    cardGfx=d.cardGfx||{snowflakes:false,holly:false,stars:false,ornaments:false,border:false,dots:false};
+    if(cardGfx.dots===undefined) cardGfx.dots=false;
     if(imgs.length===0) init();
     else ensureFlex();
   }else{
@@ -508,7 +533,7 @@ function build(){
     }
     html+='<div class="row" style="flex:'+rowFlex[r]+'">';
     for(let c=0;c<cfg.cols;c++){
-      if(c===mc){
+      if(c===mc||isMsgCell(r,c)){
         html+=buildMsgCell(colFlex[r][c],cardFont,cardSize,cardColor);
         if(c<cfg.cols-1) html+='<div class="resize-v" data-row="'+r+'" data-col="'+c+'"></div>';
         continue;
@@ -551,6 +576,12 @@ function buildOverlay(){
   let o='<div class="card-overlay">';
   // Gold border
   if(cardGfx.border) o+='<div style="position:absolute;top:1.5%;left:1.5%;right:1.5%;bottom:1.5%;border:3px solid #d4a530;border-radius:4px;box-shadow:0 0 8px rgba(212,165,48,.4)"></div>';
+  // Gold dots
+  if(cardGfx.dots){
+    let dots=[];
+    for(let dy=5;dy<=95;dy+=10) for(let dx=4;dx<=96;dx+=8) dots.push({x:dx+(dy%20===15?4:0),y:dy});
+    dots.forEach(d=>{o+='<div style="position:absolute;left:'+d.x+'%;top:'+d.y+'%;width:5px;height:5px;border-radius:50%;background:#d4a530;opacity:.55"></div>';});
+  }
   // Snowflakes
   if(cardGfx.snowflakes){
     let flakes=[{x:5,y:4,s:18},{x:15,y:12,s:12},{x:82,y:6,s:16},{x:92,y:15,s:10},{x:8,y:85,s:14},{x:90,y:82,s:12},{x:50,y:5,s:10},{x:25,y:8,s:8},{x:70,y:10,s:9},{x:38,y:90,s:11},{x:65,y:88,s:8},{x:12,y:45,s:9},{x:88,y:50,s:10}];
@@ -578,8 +609,8 @@ function buildOverlay(){
       o+='<div style="font-size:18px;color:'+orn.c+';text-shadow:0 1px 3px rgba(0,0,0,.5)">&#127870;</div></div>';
     });
   }
-  // Message (only as overlay when no dedicated message row/col)
-  if(cardMsg&&getMsgRow()<0&&getMsgCol()<0){
+  // Message (only as overlay when no dedicated message row/col/cell)
+  if(cardMsg&&getMsgRow()<0&&getMsgCol()<0&&getMsgCells().length===0){
     o+='<div class="card-msg pos-'+cardPos+'" style="font-family:'+cardFont+';font-size:'+cardSize+'px;color:'+cardColor+'">'+escHtml(cardMsg)+'</div>';
   }
   o+='</div>';
@@ -943,7 +974,7 @@ function toggleGfx(key){
   build();save();
 }
 function syncGfxToggles(){
-  let map={'Snowflakes':'snowflakes','Holly Corners':'holly','Stars':'stars','Ornaments':'ornaments','Gold Border':'border'};
+  let map={'Snowflakes':'snowflakes','Holly Corners':'holly','Stars':'stars','Ornaments':'ornaments','Gold Border':'border','Gold Dots':'dots'};
   document.querySelectorAll('.gfx-toggle').forEach(el=>{
     let key=map[el.textContent];
     if(key) el.classList.toggle('on',cardGfx[key]);
@@ -1058,7 +1089,7 @@ async function generatePrint(){
 
     for(let c=0;c<cfg.cols;c++){
       let cellW=cW[c],cellH=rH[r];
-      if(c===mc){
+      if(c===mc||isMsgCell(r,c)){
         drawMsgBand(cx,cy,cellW,cellH);
         cx+=cellW+gap;
         continue;
@@ -1108,6 +1139,15 @@ function drawCardOverlay(ctx,pw,ph){
     ctx.shadowBlur=8*sc;
     ctx.strokeRect(m,m,pw-m*2,ph-m*2);
     ctx.shadowBlur=0;
+  }
+  // Gold dots
+  if(cardGfx.dots){
+    ctx.fillStyle='rgba(212,165,48,.55)';
+    for(let dy=5;dy<=95;dy+=10) for(let dx=4;dx<=96;dx+=8){
+      let x=(dx+(dy%20===15?4:0))/100*pw;
+      let y=dy/100*ph;
+      ctx.beginPath();ctx.arc(x,y,2.5*sc,0,Math.PI*2);ctx.fill();
+    }
   }
   // Snowflakes
   if(cardGfx.snowflakes){
@@ -1170,8 +1210,8 @@ function drawCardOverlay(ctx,pw,ph){
       ctx.shadowBlur=0;
     });
   }
-  // Message (only as overlay when no dedicated message row/col)
-  if(cardMsg&&getMsgRow()<0&&getMsgCol()<0){
+  // Message (only as overlay when no dedicated message row/col/cell)
+  if(cardMsg&&getMsgRow()<0&&getMsgCol()<0&&getMsgCells().length===0){
     let fs=cardSize*sc;
     ctx.font=fs+'px '+cardFont;
     ctx.fillStyle=cardColor;
