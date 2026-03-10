@@ -46,8 +46,12 @@ h1{text-align:center;font-size:18px;font-weight:300;margin-bottom:4px}
 .holly .inner{filter:saturate(1.3) contrast(1.1) brightness(.95)}
 .frost .inner{filter:saturate(.4) brightness(1.2) contrast(.9) hue-rotate(190deg)}
 .glow .inner{filter:sepia(.25) saturate(1.4) brightness(1.1) contrast(1.05)}
-.panel{background:rgba(255,255,255,.05);border-radius:8px;padding:12px;margin-bottom:10px}
-.panel h3{font-size:10px;text-transform:uppercase;color:#888;margin-bottom:8px;letter-spacing:1px}
+.panel{background:rgba(255,255,255,.05);border-radius:8px;margin-bottom:6px;overflow:hidden}
+.panel h3{font-size:10px;text-transform:uppercase;color:#888;letter-spacing:1px;cursor:pointer;padding:10px 12px;margin:0;display:flex;align-items:center;justify-content:space-between;-webkit-user-select:none;user-select:none}
+.panel h3::after{content:'\25BC';font-size:8px;transition:transform .2s}
+.panel.collapsed h3::after{transform:rotate(-90deg)}
+.panel-body{padding:0 12px 12px}
+.panel.collapsed .panel-body{display:none}
 .info{background:rgba(240,192,96,.1);border:1px solid rgba(240,192,96,.3);border-radius:6px;padding:10px;margin-bottom:10px}
 .info h4{color:#f0c060;font-size:13px}
 .info p{color:#888;font-size:10px}
@@ -92,6 +96,8 @@ select,input[type=text]{width:100%;padding:10px;border:1px solid #444;border-rad
 .card-msg.pos-bottom{bottom:2%}
 .card-msg.pos-center{top:50%;transform:translateY(-50%)}
 .card-gfx{position:absolute}
+.msg-row{display:flex;align-items:center;justify-content:center;text-align:center;padding:2%;line-height:1.3;word-wrap:break-word}
+.msg-row.empty{color:rgba(255,255,255,.2);font-size:14px}
 .xmas-panel{display:none}
 .xmas-panel.show{display:block}
 .presets-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
@@ -159,7 +165,8 @@ input[type=file]{display:none}
   <p style="margin:4px 0 0 0;color:#888;font-size:9px;">Selected: <span id="swapStatus">Select first position</span></p>
 </div>
 <div class="panel" id="edits">
-<h3>Adjustments</h3>
+<h3 onclick="togglePanel(this)">Adjustments</h3>
+<div class="panel-body">
 <div class="grp"><label>Zoom</label><div class="sld"><input type="range" id="zoom" min="100" max="250" value="100" step="5" oninput="updSlider()"><span class="val" id="zoomV">100%</span></div></div>
 <div class="grp"><label>Pan Left/Right</label><div class="sld"><input type="range" id="panX" min="-50" max="50" value="0" oninput="updSlider()"><span class="val" id="panXV">0%</span></div></div>
 <div class="grp"><label>Pan Up/Down</label><div class="sld"><input type="range" id="panY" min="-50" max="50" value="0" oninput="updSlider()"><span class="val" id="panYV">0%</span></div></div>
@@ -170,8 +177,10 @@ input[type=file]{display:none}
 <button class="btn sec" onclick="resetOne()">↩️</button>
 </div>
 </div>
-<div class="panel">
-<h3>Style</h3>
+</div>
+<div class="panel collapsed">
+<h3 onclick="togglePanel(this)">Style</h3>
+<div class="panel-body">
 <div class="chips">
 <span class="chip snat" id="chip-natural" onclick="setStyle('natural')">Natural</span>
 <span class="chip smcm" id="chip-mcm" onclick="setStyle('mcm')">MCM</span>
@@ -186,8 +195,10 @@ input[type=file]{display:none}
 <span class="chip sglow" id="chip-glow" onclick="setStyle('glow')">Glow</span>
 </div>
 </div>
+</div>
 <div class="panel xmas-panel" id="xmasPanel">
-<h3>Card Message</h3>
+<h3 onclick="togglePanel(this)">Card Message</h3>
+<div class="panel-body">
 <div class="grp"><label>Message</label><input type="text" id="cardMsg" placeholder="Merry Christmas!" oninput="updCard()"></div>
 <div class="presets-row">
 <span class="preset-btn" onclick="setMsg('Merry Christmas!')">Merry Christmas!</span>
@@ -225,7 +236,11 @@ input[type=file]{display:none}
 <span class="color-chip" style="background:#000" onclick="setCardColor('#000')" data-c="#000"></span>
 </div>
 </div>
-<h3 style="margin-top:12px">Decorations</h3>
+</div>
+</div>
+<div class="panel xmas-panel" id="xmasPanel2">
+<h3 onclick="togglePanel(this)">Decorations</h3>
+<div class="panel-body">
 <div class="gfx-toggles">
 <span class="gfx-toggle" onclick="toggleGfx('snowflakes')">Snowflakes</span>
 <span class="gfx-toggle" onclick="toggleGfx('holly')">Holly Corners</span>
@@ -234,8 +249,10 @@ input[type=file]{display:none}
 <span class="gfx-toggle" onclick="toggleGfx('border')">Gold Border</span>
 </div>
 </div>
-<div class="panel">
-<h3>Grid Layout</h3>
+</div>
+<div class="panel collapsed">
+<h3 onclick="togglePanel(this)">Grid Layout</h3>
+<div class="panel-body">
 <select id="gridSelect" onchange="setGrid()">
 <option value="1x1">1 × 1 (1 image)</option>
 <option value="1x2">1 × 2 (2 images)</option>
@@ -256,11 +273,20 @@ input[type=file]{display:none}
 <option value="xmas-top">Card: Hero + 3 Bottom (4)</option>
 <option value="xmas-strip">Card: Photo Strip (4)</option>
 <option value="xmas-five">Card: Storyboard (6)</option>
+<option disabled>── Cards with Message ──</option>
+<option value="xmas-msg-top1">Message Top + 1 Photo</option>
+<option value="xmas-msg-bot1">1 Photo + Message Bottom</option>
+<option value="xmas-msg-top2">Message Top + 2 Photos</option>
+<option value="xmas-msg-bot2">2 Photos + Message Bottom</option>
+<option value="xmas-msg-top3">Message Top + 3 Photos</option>
+<option value="xmas-msg-mid">Photos + Message + Photos</option>
 </select>
 <button class="btn sec" onclick="resetSizes()" style="margin-top:6px;padding:8px;font-size:11px">↔ Reset Cell Sizes</button>
 </div>
-<div class="panel">
-<h3>Print Size</h3>
+</div>
+<div class="panel collapsed">
+<h3 onclick="togglePanel(this)">Print Size</h3>
+<div class="panel-body">
 <select id="printSelect" onchange="setPrintSize()">
 <option value="20x16">20×16 Landscape (6000×4800)</option>
 <option value="16x20">16×20 Portrait (4800×6000)</option>
@@ -275,6 +301,7 @@ input[type=file]{display:none}
 <option value="6x4">6×4 Landscape (1800×1200)</option>
 <option value="4x6">4×6 Portrait (1200×1800)</option>
 </select>
+</div>
 </div>
 <div class="row2">
 <button class="btn sec" onclick="resetAll()">🔄 Reset</button>
@@ -301,7 +328,13 @@ const cardPresets={
   'xmas-classic':{grid:'2x2',print:'5x7',rowFlex:[1,1],colFlex:[[1,1],[1,1]]},
   'xmas-top':{grid:'2x3',print:'5x7',rowFlex:[1.6,1],colFlex:[[1,1,1],[1,1,1]]},
   'xmas-strip':{grid:'4x1',print:'5x7',rowFlex:[1,1,1,1],colFlex:[[1],[1],[1],[1]]},
-  'xmas-five':{grid:'3x2',print:'5x7',rowFlex:[1,1.4,1],colFlex:[[1,1],[1,1],[1,1]]}
+  'xmas-five':{grid:'3x2',print:'5x7',rowFlex:[1,1.4,1],colFlex:[[1,1],[1,1],[1,1]]},
+  'xmas-msg-top1':{grid:'2x1',print:'5x7',rowFlex:[0.6,1.4],colFlex:[[1],[1]],msgRow:0},
+  'xmas-msg-bot1':{grid:'2x1',print:'5x7',rowFlex:[1.4,0.6],colFlex:[[1],[1]],msgRow:1},
+  'xmas-msg-top2':{grid:'2x2',print:'5x7',rowFlex:[0.5,1],colFlex:[[1,1],[1,1]],msgRow:0},
+  'xmas-msg-bot2':{grid:'2x2',print:'5x7',rowFlex:[1,0.5],colFlex:[[1,1],[1,1]],msgRow:1},
+  'xmas-msg-top3':{grid:'2x3',print:'5x7',rowFlex:[0.5,1],colFlex:[[1,1,1],[1,1,1]],msgRow:0},
+  'xmas-msg-mid':{grid:'3x2',print:'5x7',rowFlex:[1,0.5,1],colFlex:[[1,1],[1,1],[1,1]],msgRow:1}
 };
 let activePreset=null;
 let cardMsg='',cardFont='Georgia, serif',cardSize=28,cardColor='#fff',cardPos='bottom';
@@ -311,9 +344,15 @@ function getGridConfig(){
   let [r,c]=grid.split('x').map(Number);
   return {rows:r,cols:c};
 }
+function getMsgRow(){
+  if(activePreset&&cardPresets[activePreset]&&cardPresets[activePreset].msgRow!==undefined) return cardPresets[activePreset].msgRow;
+  return -1;
+}
 function getTotalCells(){
   let cfg=getGridConfig();
-  return cfg.rows*cfg.cols;
+  let total=cfg.rows*cfg.cols;
+  if(getMsgRow()>=0) total-=cfg.cols;
+  return total;
 }
 
 function resetFlex(){
@@ -417,9 +456,20 @@ function build(){
   ensureArrays();
   let cfg=getGridConfig();
   let [pw,ph]=printSize.split('x').map(Number);
+  let mr=getMsgRow();
   let html='';
   let idx=0;
   for(let r=0;r<cfg.rows;r++){
+    if(r===mr){
+      // Message row
+      let msgTxt=cardMsg||'';
+      let cls='row msg-row'+(msgTxt?'':' empty');
+      html+='<div class="'+cls+'" style="flex:'+rowFlex[r]+';font-family:'+cardFont+';font-size:'+cardSize+'px;color:'+cardColor+';text-shadow:1px 1px 4px rgba(0,0,0,.6)">';
+      html+=(msgTxt?escHtml(msgTxt):'Click "Card Message" to add text');
+      html+='</div>';
+      if(r<cfg.rows-1) html+='<div class="resize-h" data-row="'+r+'"></div>';
+      continue;
+    }
     html+='<div class="row" style="flex:'+rowFlex[r]+'">';
     for(let c=0;c<cfg.cols;c++){
       let pos=idx;
@@ -487,8 +537,8 @@ function buildOverlay(){
       o+='<div style="font-size:18px;color:'+orn.c+';text-shadow:0 1px 3px rgba(0,0,0,.5)">&#127870;</div></div>';
     });
   }
-  // Message
-  if(cardMsg){
+  // Message (only as overlay when no dedicated message row)
+  if(cardMsg&&getMsgRow()<0){
     o+='<div class="card-msg pos-'+cardPos+'" style="font-family:'+cardFont+';font-size:'+cardSize+'px;color:'+cardColor+'">'+escHtml(cardMsg)+'</div>';
   }
   o+='</div>';
@@ -499,8 +549,13 @@ function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(
 
 function showXmasPanel(){
   let panel=document.getElementById('xmasPanel');
-  if(activePreset) panel.classList.add('show');
-  else panel.classList.remove('show');
+  let panel2=document.getElementById('xmasPanel2');
+  if(activePreset){panel.classList.add('show');panel2.classList.add('show');}
+  else{panel.classList.remove('show');panel2.classList.remove('show');}
+}
+
+function togglePanel(h3){
+  h3.closest('.panel').classList.toggle('collapsed');
 }
 
 // === RESIZE HANDLES ===
@@ -919,10 +974,43 @@ async function generatePrint(){
   let availH=ph-pad*2-gap*(cfg.rows-1);
   let rH=rowFlex.map(f=>(f/totalRF)*availH);
 
+  let mr=getMsgRow();
   let idx=0,totalCells=getTotalCells(),processed=0;
   let cy=pad;
 
   for(let r=0;r<cfg.rows;r++){
+    if(r===mr){
+      // Draw message row band
+      let bandH=rH[r];
+      let bandW=pw-pad*2;
+      // Background matches collage bg
+      ctx.fillStyle='#1f1c18';
+      ctx.fillRect(pad,cy,bandW,bandH);
+      if(cardMsg){
+        let sc=pw/500;
+        let fs=cardSize*sc;
+        ctx.font=fs+'px '+cardFont;
+        ctx.fillStyle=cardColor;
+        ctx.textAlign='center';
+        ctx.shadowColor='rgba(0,0,0,.6)';
+        ctx.shadowBlur=4*sc;
+        // Word wrap within band
+        let words=cardMsg.split(' ');
+        let lines=[];let line='';let maxW=bandW*0.9;
+        words.forEach(w=>{
+          let test=line?line+' '+w:w;
+          if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=w;}
+          else line=test;
+        });
+        if(line) lines.push(line);
+        let totalTH=lines.length*fs*1.3;
+        let startY=cy+bandH/2-totalTH/2+fs*0.85;
+        lines.forEach((l,i)=>{ctx.fillText(l,pw/2,startY+i*fs*1.3);});
+        ctx.textAlign='start';ctx.shadowBlur=0;
+      }
+      cy+=rH[r]+gap;
+      continue;
+    }
     let totalCF=colFlex[r].reduce((a,b)=>a+b,0);
     let availW=pw-pad*2-gap*(cfg.cols-1);
     let cW=colFlex[r].map(f=>(f/totalCF)*availW);
@@ -1028,8 +1116,8 @@ function drawCardOverlay(ctx,pw,ph){
       ctx.shadowBlur=0;
     });
   }
-  // Message
-  if(cardMsg){
+  // Message (only as overlay when no dedicated message row)
+  if(cardMsg&&getMsgRow()<0){
     let fs=cardSize*sc;
     ctx.font=fs+'px '+cardFont;
     ctx.fillStyle=cardColor;
