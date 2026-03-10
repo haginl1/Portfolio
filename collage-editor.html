@@ -86,6 +86,23 @@ select,input[type=text]{width:100%;padding:10px;border:1px solid #444;border-rad
 .sholly{background:#3a5a3a;color:#c44}
 .sfrost{background:#3a4a5a;color:#adf}
 .sglow{background:#5a4a2a;color:#fc8}
+.card-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;overflow:hidden}
+.card-msg{position:absolute;left:0;right:0;text-align:center;padding:4% 8%;line-height:1.2;text-shadow:1px 1px 4px rgba(0,0,0,.6);word-wrap:break-word}
+.card-msg.pos-top{top:2%}
+.card-msg.pos-bottom{bottom:2%}
+.card-msg.pos-center{top:50%;transform:translateY(-50%)}
+.card-gfx{position:absolute}
+.xmas-panel{display:none}
+.xmas-panel.show{display:block}
+.presets-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.preset-btn{padding:6px 10px;border:1px solid #555;border-radius:12px;background:#2a2a2a;color:#ccc;font-size:10px;cursor:pointer}
+.preset-btn:active{background:#444}
+.color-chips{display:flex;gap:6px;flex-wrap:wrap}
+.color-chip{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.color-chip.on{border-color:#f0c060}
+.gfx-toggles{display:flex;gap:6px;flex-wrap:wrap}
+.gfx-toggle{padding:6px 10px;border:2px solid #444;border-radius:8px;background:#2a2a2a;color:#aaa;font-size:11px;cursor:pointer}
+.gfx-toggle.on{border-color:#c44;background:rgba(204,68,68,.15);color:#faa}
 .cnt{text-align:center;font-size:11px;color:#888;padding:6px}
 .cnt b{color:#f0c060}
 .saved{text-align:center;font-size:10px;color:#6a6;opacity:0;transition:opacity .3s}
@@ -169,6 +186,54 @@ input[type=file]{display:none}
 <span class="chip sglow" id="chip-glow" onclick="setStyle('glow')">Glow</span>
 </div>
 </div>
+<div class="panel xmas-panel" id="xmasPanel">
+<h3>Card Message</h3>
+<div class="grp"><label>Message</label><input type="text" id="cardMsg" placeholder="Merry Christmas!" oninput="updCard()"></div>
+<div class="presets-row">
+<span class="preset-btn" onclick="setMsg('Merry Christmas!')">Merry Christmas!</span>
+<span class="preset-btn" onclick="setMsg('Happy Holidays!')">Happy Holidays!</span>
+<span class="preset-btn" onclick="setMsg('Season\'s Greetings')">Season's Greetings</span>
+<span class="preset-btn" onclick="setMsg('Joy to the World')">Joy to the World</span>
+<span class="preset-btn" onclick="setMsg('Peace &amp; Love')">Peace & Love</span>
+<span class="preset-btn" onclick="setMsg('')">Clear</span>
+</div>
+<div class="grp"><label>Font</label>
+<select id="cardFont" onchange="updCard()">
+<option value="Georgia, serif">Georgia (Classic)</option>
+<option value="'Brush Script MT', cursive">Brush Script (Fancy)</option>
+<option value="'Palatino Linotype', serif">Palatino (Elegant)</option>
+<option value="Impact, sans-serif">Impact (Bold)</option>
+<option value="-apple-system, sans-serif">System (Clean)</option>
+<option value="'Courier New', monospace">Courier (Typewriter)</option>
+</select>
+</div>
+<div class="grp"><label>Size</label><div class="sld"><input type="range" id="cardSize" min="12" max="60" value="28" oninput="updCard()"><span class="val" id="cardSizeV">28</span></div></div>
+<div class="grp"><label>Position</label>
+<select id="cardPos" onchange="updCard()">
+<option value="top">Top</option>
+<option value="center">Center</option>
+<option value="bottom" selected>Bottom</option>
+</select>
+</div>
+<div class="grp"><label>Color</label>
+<div class="color-chips">
+<span class="color-chip on" style="background:#fff" onclick="setCardColor('#fff')" data-c="#fff"></span>
+<span class="color-chip" style="background:#f0c060" onclick="setCardColor('#f0c060')" data-c="#f0c060"></span>
+<span class="color-chip" style="background:#c44" onclick="setCardColor('#c44')" data-c="#c44"></span>
+<span class="color-chip" style="background:#4a4" onclick="setCardColor('#4a4')" data-c="#4a4"></span>
+<span class="color-chip" style="background:#adf" onclick="setCardColor('#adf')" data-c="#adf"></span>
+<span class="color-chip" style="background:#000" onclick="setCardColor('#000')" data-c="#000"></span>
+</div>
+</div>
+<h3 style="margin-top:12px">Decorations</h3>
+<div class="gfx-toggles">
+<span class="gfx-toggle" onclick="toggleGfx('snowflakes')">Snowflakes</span>
+<span class="gfx-toggle" onclick="toggleGfx('holly')">Holly Corners</span>
+<span class="gfx-toggle" onclick="toggleGfx('stars')">Stars</span>
+<span class="gfx-toggle" onclick="toggleGfx('ornaments')">Ornaments</span>
+<span class="gfx-toggle" onclick="toggleGfx('border')">Gold Border</span>
+</div>
+</div>
 <div class="panel">
 <h3>Grid Layout</h3>
 <select id="gridSelect" onchange="setGrid()">
@@ -239,6 +304,8 @@ const cardPresets={
   'xmas-five':{grid:'3x2',print:'5x7',rowFlex:[1,1.4,1],colFlex:[[1,1],[1,1],[1,1]]}
 };
 let activePreset=null;
+let cardMsg='',cardFont='Georgia, serif',cardSize=28,cardColor='#fff',cardPos='bottom';
+let cardGfx={snowflakes:false,holly:false,stars:false,ornaments:false,border:false};
 
 function getGridConfig(){
   let [r,c]=grid.split('x').map(Number);
@@ -306,6 +373,12 @@ function load(){
     rowFlex=d.rowFlex||[];
     colFlex=d.colFlex||[];
     activePreset=d.activePreset||null;
+    cardMsg=d.cardMsg||'';
+    cardFont=d.cardFont||'Georgia, serif';
+    cardSize=d.cardSize||28;
+    cardColor=d.cardColor||'#fff';
+    cardPos=d.cardPos||'bottom';
+    cardGfx=d.cardGfx||{snowflakes:false,holly:false,stars:false,ornaments:false,border:false};
     if(imgs.length===0) init();
     else ensureFlex();
   }else{
@@ -314,7 +387,7 @@ function load(){
 }
 
 function save(){
-  localStorage.setItem(KEY,JSON.stringify({imgs,order,settings,style,grid,printSize,nextId,rowFlex,colFlex,activePreset}));
+  localStorage.setItem(KEY,JSON.stringify({imgs,order,settings,style,grid,printSize,nextId,rowFlex,colFlex,activePreset,cardMsg,cardFont,cardSize,cardColor,cardPos,cardGfx}));
   localStorage.removeItem('collageV3');
   let el=document.getElementById('saved');
   el.classList.add('show');
@@ -373,11 +446,61 @@ function build(){
     html+='</div>';
     if(r<cfg.rows-1) html+='<div class="resize-h" data-row="'+r+'"></div>';
   }
-  document.querySelector('.frame').innerHTML='<div class="collage '+style+'" id="grid" style="aspect-ratio:'+pw+'/'+ph+'">'+html+'</div>';
+  let overlay=buildOverlay();
+  document.querySelector('.frame').innerHTML='<div class="collage '+style+'" id="grid" style="aspect-ratio:'+pw+'/'+ph+';position:relative">'+html+overlay+'</div>';
   updCnt();
   updateImageList();
   setupResizeHandlers();
   if(mode==='arrange') setupDragDrop();
+  showXmasPanel();
+}
+
+function buildOverlay(){
+  if(!activePreset&&!cardMsg&&!Object.values(cardGfx).some(v=>v)) return '';
+  let o='<div class="card-overlay">';
+  // Gold border
+  if(cardGfx.border) o+='<div style="position:absolute;top:1.5%;left:1.5%;right:1.5%;bottom:1.5%;border:3px solid #d4a530;border-radius:4px;box-shadow:0 0 8px rgba(212,165,48,.4)"></div>';
+  // Snowflakes
+  if(cardGfx.snowflakes){
+    let flakes=[{x:5,y:4,s:18},{x:15,y:12,s:12},{x:82,y:6,s:16},{x:92,y:15,s:10},{x:8,y:85,s:14},{x:90,y:82,s:12},{x:50,y:5,s:10},{x:25,y:8,s:8},{x:70,y:10,s:9},{x:38,y:90,s:11},{x:65,y:88,s:8},{x:12,y:45,s:9},{x:88,y:50,s:10}];
+    flakes.forEach(f=>{o+='<div style="position:absolute;left:'+f.x+'%;top:'+f.y+'%;font-size:'+f.s+'px;color:rgba(255,255,255,.7);text-shadow:0 0 4px rgba(255,255,255,.5)">&#10052;</div>';});
+  }
+  // Holly corners
+  if(cardGfx.holly){
+    let holly='<span style="font-size:22px">&#127812;</span>';
+    o+='<div style="position:absolute;top:2%;left:2%">'+holly+'</div>';
+    o+='<div style="position:absolute;top:2%;right:2%;transform:scaleX(-1)">'+holly+'</div>';
+    o+='<div style="position:absolute;bottom:2%;left:2%;transform:scaleY(-1)">'+holly+'</div>';
+    o+='<div style="position:absolute;bottom:2%;right:2%;transform:scale(-1,-1)">'+holly+'</div>';
+  }
+  // Stars
+  if(cardGfx.stars){
+    let stars=[{x:10,y:3,s:14},{x:30,y:5,s:10},{x:50,y:2,s:16},{x:70,y:4,s:11},{x:88,y:3,s:13},{x:5,y:20,s:8},{x:93,y:18,s:9},{x:20,y:92,s:10},{x:78,y:93,s:9}];
+    stars.forEach(s=>{o+='<div style="position:absolute;left:'+s.x+'%;top:'+s.y+'%;font-size:'+s.s+'px;color:#f0c060;text-shadow:0 0 6px rgba(240,192,96,.6)">&#9733;</div>';});
+  }
+  // Ornaments
+  if(cardGfx.ornaments){
+    let orns=[{x:12,c:'#c44'},{x:30,c:'#4a4'},{x:50,c:'#f0c060'},{x:70,c:'#c44'},{x:88,c:'#4a4'}];
+    orns.forEach(orn=>{
+      o+='<div style="position:absolute;left:'+orn.x+'%;top:0;text-align:center;transform:translateX(-50%)">';
+      o+='<div style="width:1px;height:12px;background:#888;margin:0 auto"></div>';
+      o+='<div style="font-size:18px;color:'+orn.c+';text-shadow:0 1px 3px rgba(0,0,0,.5)">&#127870;</div></div>';
+    });
+  }
+  // Message
+  if(cardMsg){
+    o+='<div class="card-msg pos-'+cardPos+'" style="font-family:'+cardFont+';font-size:'+cardSize+'px;color:'+cardColor+'">'+escHtml(cardMsg)+'</div>';
+  }
+  o+='</div>';
+  return o;
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function showXmasPanel(){
+  let panel=document.getElementById('xmasPanel');
+  if(activePreset) panel.classList.add('show');
+  else panel.classList.remove('show');
 }
 
 // === RESIZE HANDLES ===
@@ -693,6 +816,44 @@ function resetOne(){
   build();save();
 }
 
+// === CARD MESSAGE & GRAPHICS ===
+function updCard(){
+  cardMsg=document.getElementById('cardMsg').value;
+  cardFont=document.getElementById('cardFont').value;
+  cardSize=parseInt(document.getElementById('cardSize').value);
+  cardPos=document.getElementById('cardPos').value;
+  document.getElementById('cardSizeV').textContent=cardSize;
+  build();save();
+}
+function setMsg(t){
+  cardMsg=t;
+  document.getElementById('cardMsg').value=t;
+  build();save();
+}
+function setCardColor(c){
+  cardColor=c;
+  document.querySelectorAll('.color-chip').forEach(el=>{
+    el.classList.toggle('on',el.dataset.c===c);
+  });
+  build();save();
+}
+function toggleGfx(key){
+  cardGfx[key]=!cardGfx[key];
+  document.querySelectorAll('.gfx-toggle').forEach(el=>{
+    let k=el.textContent.toLowerCase().replace(/ /g,'').replace('corners','').replace('border','border');
+    // match by checking text
+  });
+  syncGfxToggles();
+  build();save();
+}
+function syncGfxToggles(){
+  let map={'Snowflakes':'snowflakes','Holly Corners':'holly','Stars':'stars','Ornaments':'ornaments','Gold Border':'border'};
+  document.querySelectorAll('.gfx-toggle').forEach(el=>{
+    let key=map[el.textContent];
+    if(key) el.classList.toggle('on',cardGfx[key]);
+  });
+}
+
 // === STYLE / LAYOUT ===
 function setStyle(s){
   style=s;
@@ -789,6 +950,9 @@ async function generatePrint(){
     cy+=rH[r]+gap;
   }
 
+  // Draw card overlays
+  drawCardOverlay(ctx,pw,ph);
+
   canvas.toBlob(blob=>{
     let url=URL.createObjectURL(blob);
     let a=document.createElement('a');
@@ -797,6 +961,105 @@ async function generatePrint(){
     URL.revokeObjectURL(url);
     document.getElementById('progress').classList.remove('show');
   },'image/png');
+}
+
+function drawCardOverlay(ctx,pw,ph){
+  let sc=pw/500; // scale factor relative to preview
+  ctx.save();
+  // Gold border
+  if(cardGfx.border){
+    let m=pw*0.015;
+    ctx.strokeStyle='#d4a530';
+    ctx.lineWidth=3*sc;
+    ctx.shadowColor='rgba(212,165,48,.4)';
+    ctx.shadowBlur=8*sc;
+    ctx.strokeRect(m,m,pw-m*2,ph-m*2);
+    ctx.shadowBlur=0;
+  }
+  // Snowflakes
+  if(cardGfx.snowflakes){
+    let flakes=[{x:.05,y:.04,s:18},{x:.15,y:.12,s:12},{x:.82,y:.06,s:16},{x:.92,y:.15,s:10},{x:.08,y:.85,s:14},{x:.90,y:.82,s:12},{x:.50,y:.05,s:10},{x:.25,y:.08,s:8},{x:.70,y:.10,s:9},{x:.38,y:.90,s:11},{x:.65,y:.88,s:8},{x:.12,y:.45,s:9},{x:.88,y:.50,s:10}];
+    ctx.fillStyle='rgba(255,255,255,.7)';
+    ctx.shadowColor='rgba(255,255,255,.5)';
+    ctx.shadowBlur=4*sc;
+    flakes.forEach(f=>{
+      ctx.font=(f.s*sc)+'px serif';
+      ctx.fillText('\u2744',f.x*pw,f.y*ph+f.s*sc);
+    });
+    ctx.shadowBlur=0;
+  }
+  // Holly corners
+  if(cardGfx.holly){
+    let hs=22*sc;
+    ctx.font=hs+'px serif';
+    ctx.fillStyle='#fff';
+    ctx.fillText('\uD83C\uDF40',pw*0.02,ph*0.02+hs);
+    ctx.save();ctx.translate(pw*0.98,ph*0.02+hs);ctx.scale(-1,1);ctx.fillText('\uD83C\uDF40',0,0);ctx.restore();
+    ctx.save();ctx.translate(pw*0.02,ph*0.98);ctx.scale(1,-1);ctx.fillText('\uD83C\uDF40',0,0);ctx.restore();
+    ctx.save();ctx.translate(pw*0.98,ph*0.98);ctx.scale(-1,-1);ctx.fillText('\uD83C\uDF40',0,0);ctx.restore();
+  }
+  // Stars
+  if(cardGfx.stars){
+    let stars=[{x:.10,y:.03,s:14},{x:.30,y:.05,s:10},{x:.50,y:.02,s:16},{x:.70,y:.04,s:11},{x:.88,y:.03,s:13},{x:.05,y:.20,s:8},{x:.93,y:.18,s:9},{x:.20,y:.92,s:10},{x:.78,y:.93,s:9}];
+    ctx.fillStyle='#f0c060';
+    ctx.shadowColor='rgba(240,192,96,.6)';
+    ctx.shadowBlur=6*sc;
+    stars.forEach(s=>{
+      ctx.font=(s.s*sc)+'px serif';
+      ctx.fillText('\u2605',s.x*pw,s.y*ph+s.s*sc);
+    });
+    ctx.shadowBlur=0;
+  }
+  // Ornaments
+  if(cardGfx.ornaments){
+    let orns=[{x:.12,c:'#c44'},{x:.30,c:'#4a4'},{x:.50,c:'#f0c060'},{x:.70,c:'#c44'},{x:.88,c:'#4a4'}];
+    orns.forEach(orn=>{
+      let ox=orn.x*pw,oy=0;
+      ctx.strokeStyle='#888';
+      ctx.lineWidth=1*sc;
+      ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,oy+12*sc);ctx.stroke();
+      ctx.font=(18*sc)+'px serif';
+      ctx.fillStyle=orn.c;
+      ctx.shadowColor='rgba(0,0,0,.5)';
+      ctx.shadowBlur=3*sc;
+      ctx.textAlign='center';
+      ctx.fillText('\uD83C\uDF86',ox,oy+28*sc);
+      ctx.textAlign='start';
+      ctx.shadowBlur=0;
+    });
+  }
+  // Message
+  if(cardMsg){
+    let fs=cardSize*sc;
+    ctx.font=fs+'px '+cardFont;
+    ctx.fillStyle=cardColor;
+    ctx.textAlign='center';
+    ctx.shadowColor='rgba(0,0,0,.6)';
+    ctx.shadowBlur=4*sc;
+    let y;
+    if(cardPos==='top') y=ph*0.02+fs*1.2;
+    else if(cardPos==='center') y=ph/2+fs/3;
+    else y=ph*0.98-fs*0.2;
+    // Word wrap
+    let words=cardMsg.split(' ');
+    let lines=[];
+    let line='';
+    let maxW=pw*0.84;
+    words.forEach(w=>{
+      let test=line?line+' '+w:w;
+      if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=w;}
+      else line=test;
+    });
+    if(line) lines.push(line);
+    let totalH=lines.length*fs*1.2;
+    let startY=cardPos==='center'?y-totalH/2+fs:cardPos==='top'?y:y-totalH+fs;
+    lines.forEach((l,i)=>{
+      ctx.fillText(l,pw/2,startY+i*fs*1.2);
+    });
+    ctx.textAlign='start';
+    ctx.shadowBlur=0;
+  }
+  ctx.restore();
 }
 
 function loadImage(src){
@@ -851,6 +1114,15 @@ document.getElementById('printSelect').value=printSize;
 document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
 let chipEl=document.getElementById('chip-'+style);
 if(chipEl) chipEl.classList.add('on');
+document.getElementById('cardMsg').value=cardMsg;
+document.getElementById('cardFont').value=cardFont;
+document.getElementById('cardSize').value=cardSize;
+document.getElementById('cardSizeV').textContent=cardSize;
+document.getElementById('cardPos').value=cardPos;
+document.querySelectorAll('.color-chip').forEach(el=>{
+  el.classList.toggle('on',el.dataset.c===cardColor);
+});
+syncGfxToggles();
 build();
 </script>
 </body>
