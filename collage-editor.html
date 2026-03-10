@@ -98,6 +98,8 @@ select,input[type=text]{width:100%;padding:10px;border:1px solid #444;border-rad
 .card-gfx{position:absolute}
 .msg-row{display:flex;align-items:center;justify-content:center;text-align:center;padding:2%;line-height:1.3;word-wrap:break-word}
 .msg-row.empty{color:rgba(255,255,255,.2);font-size:14px}
+.msg-col{display:flex;align-items:center;justify-content:center;text-align:center;padding:3% 2%;line-height:1.3;word-wrap:break-word;writing-mode:horizontal-tb}
+.msg-col.empty{color:rgba(255,255,255,.2);font-size:12px}
 .xmas-panel{display:none}
 .xmas-panel.show{display:block}
 .presets-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
@@ -280,6 +282,12 @@ input[type=file]{display:none}
 <option value="xmas-msg-bot2">2 Photos + Message Bottom</option>
 <option value="xmas-msg-top3">Message Top + 3 Photos</option>
 <option value="xmas-msg-mid">Photos + Message + Photos</option>
+<option value="xmas-msg-left1">Message Left + 1 Photo</option>
+<option value="xmas-msg-right1">1 Photo + Message Right</option>
+<option value="xmas-msg-left2">Message Left + 2 Photos</option>
+<option value="xmas-msg-right2">2 Photos + Message Right</option>
+<option value="xmas-msg-topbot">Message Top + Photo + Message Bottom</option>
+<option value="xmas-msg-left3">Message Left + 3 Photos</option>
 </select>
 <button class="btn sec" onclick="resetSizes()" style="margin-top:6px;padding:8px;font-size:11px">↔ Reset Cell Sizes</button>
 </div>
@@ -323,7 +331,7 @@ let dragFromPos=null,resizing=null;
 
 const cardPresets={
   'xmas-single':{grid:'1x1',print:'5x7',rowFlex:[1],colFlex:[[1]]},
-  'xmas-duo':{grid:'1x2',print:'7x5',rowFlex:[1],colFlex:[[1,1]]},
+  'xmas-duo':{grid:'1x2',print:'5x7',rowFlex:[1],colFlex:[[1,1]]},
   'xmas-feature':{grid:'2x2',print:'5x7',rowFlex:[1.8,1],colFlex:[[1,1],[1,1]]},
   'xmas-classic':{grid:'2x2',print:'5x7',rowFlex:[1,1],colFlex:[[1,1],[1,1]]},
   'xmas-top':{grid:'2x3',print:'5x7',rowFlex:[1.6,1],colFlex:[[1,1,1],[1,1,1]]},
@@ -334,7 +342,13 @@ const cardPresets={
   'xmas-msg-top2':{grid:'2x2',print:'5x7',rowFlex:[0.5,1],colFlex:[[1,1],[1,1]],msgRow:0},
   'xmas-msg-bot2':{grid:'2x2',print:'5x7',rowFlex:[1,0.5],colFlex:[[1,1],[1,1]],msgRow:1},
   'xmas-msg-top3':{grid:'2x3',print:'5x7',rowFlex:[0.5,1],colFlex:[[1,1,1],[1,1,1]],msgRow:0},
-  'xmas-msg-mid':{grid:'3x2',print:'5x7',rowFlex:[1,0.5,1],colFlex:[[1,1],[1,1],[1,1]],msgRow:1}
+  'xmas-msg-mid':{grid:'3x2',print:'5x7',rowFlex:[1,0.5,1],colFlex:[[1,1],[1,1],[1,1]],msgRow:1},
+  'xmas-msg-left1':{grid:'1x2',print:'5x7',rowFlex:[1],colFlex:[[0.8,1.2]],msgCol:0},
+  'xmas-msg-right1':{grid:'1x2',print:'5x7',rowFlex:[1],colFlex:[[1.2,0.8]],msgCol:1},
+  'xmas-msg-left2':{grid:'2x2',print:'5x7',rowFlex:[1,1],colFlex:[[0.8,1.2],[0.8,1.2]],msgCol:0},
+  'xmas-msg-right2':{grid:'2x2',print:'5x7',rowFlex:[1,1],colFlex:[[1.2,0.8],[1.2,0.8]],msgCol:1},
+  'xmas-msg-topbot':{grid:'3x1',print:'5x7',rowFlex:[0.4,1.2,0.4],colFlex:[[1],[1],[1]],msgRow:0,msgRow2:2},
+  'xmas-msg-left3':{grid:'3x2',print:'5x7',rowFlex:[1,1,1],colFlex:[[0.7,1.3],[0.7,1.3],[0.7,1.3]],msgCol:0}
 };
 let activePreset=null;
 let cardMsg='',cardFont='Georgia, serif',cardSize=28,cardColor='#fff',cardPos='bottom';
@@ -348,10 +362,21 @@ function getMsgRow(){
   if(activePreset&&cardPresets[activePreset]&&cardPresets[activePreset].msgRow!==undefined) return cardPresets[activePreset].msgRow;
   return -1;
 }
+function getMsgRow2(){
+  if(activePreset&&cardPresets[activePreset]&&cardPresets[activePreset].msgRow2!==undefined) return cardPresets[activePreset].msgRow2;
+  return -1;
+}
+function getMsgCol(){
+  if(activePreset&&cardPresets[activePreset]&&cardPresets[activePreset].msgCol!==undefined) return cardPresets[activePreset].msgCol;
+  return -1;
+}
 function getTotalCells(){
   let cfg=getGridConfig();
   let total=cfg.rows*cfg.cols;
-  if(getMsgRow()>=0) total-=cfg.cols;
+  let mr=getMsgRow(),mr2=getMsgRow2(),mc=getMsgCol();
+  if(mr>=0) total-=cfg.cols;
+  if(mr2>=0) total-=cfg.cols;
+  if(mc>=0) total-=cfg.rows-(mr>=0?1:0)-(mr2>=0?1:0);
   return total;
 }
 
@@ -452,26 +477,42 @@ function ensureArrays(){
   ensureFlex();
 }
 
+function buildMsgCell(flexVal,font,size,color){
+  let msgTxt=cardMsg||'';
+  let cls='msg-col'+(msgTxt?'':' empty');
+  let html='<div class="'+cls+'" style="flex:'+flexVal+';font-family:'+font+';font-size:'+size+'px;color:'+color+';text-shadow:1px 1px 4px rgba(0,0,0,.6)">';
+  html+=(msgTxt?escHtml(msgTxt):'Add message');
+  html+='</div>';
+  return html;
+}
+function buildMsgRow(flexVal,font,size,color){
+  let msgTxt=cardMsg||'';
+  let cls='row msg-row'+(msgTxt?'':' empty');
+  let html='<div class="'+cls+'" style="flex:'+flexVal+';font-family:'+font+';font-size:'+size+'px;color:'+color+';text-shadow:1px 1px 4px rgba(0,0,0,.6)">';
+  html+=(msgTxt?escHtml(msgTxt):'Add message');
+  html+='</div>';
+  return html;
+}
 function build(){
   ensureArrays();
   let cfg=getGridConfig();
   let [pw,ph]=printSize.split('x').map(Number);
-  let mr=getMsgRow();
+  let mr=getMsgRow(),mr2=getMsgRow2(),mc=getMsgCol();
   let html='';
   let idx=0;
   for(let r=0;r<cfg.rows;r++){
-    if(r===mr){
-      // Message row
-      let msgTxt=cardMsg||'';
-      let cls='row msg-row'+(msgTxt?'':' empty');
-      html+='<div class="'+cls+'" style="flex:'+rowFlex[r]+';font-family:'+cardFont+';font-size:'+cardSize+'px;color:'+cardColor+';text-shadow:1px 1px 4px rgba(0,0,0,.6)">';
-      html+=(msgTxt?escHtml(msgTxt):'Click "Card Message" to add text');
-      html+='</div>';
+    if(r===mr||r===mr2){
+      html+=buildMsgRow(rowFlex[r],cardFont,cardSize,cardColor);
       if(r<cfg.rows-1) html+='<div class="resize-h" data-row="'+r+'"></div>';
       continue;
     }
     html+='<div class="row" style="flex:'+rowFlex[r]+'">';
     for(let c=0;c<cfg.cols;c++){
+      if(c===mc){
+        html+=buildMsgCell(colFlex[r][c],cardFont,cardSize,cardColor);
+        if(c<cfg.cols-1) html+='<div class="resize-v" data-row="'+r+'" data-col="'+c+'"></div>';
+        continue;
+      }
       let pos=idx;
       let id=order[idx];
       let img=imgs.find(x=>x.id===id);
@@ -517,7 +558,7 @@ function buildOverlay(){
   }
   // Holly corners
   if(cardGfx.holly){
-    let holly='<span style="font-size:22px">&#127812;</span>';
+    let holly='<svg viewBox="0 0 40 36" width="36" height="32" style="display:block"><ellipse cx="12" cy="20" rx="11" ry="8" fill="#2d6a2d" transform="rotate(-30 12 20)"/><ellipse cx="28" cy="20" rx="11" ry="8" fill="#2d6a2d" transform="rotate(30 28 20)"/><circle cx="17" cy="14" r="3.5" fill="#c33"/><circle cx="23" cy="14" r="3.5" fill="#c33"/><circle cx="20" cy="18" r="3.5" fill="#c33"/></svg>';
     o+='<div style="position:absolute;top:2%;left:2%">'+holly+'</div>';
     o+='<div style="position:absolute;top:2%;right:2%;transform:scaleX(-1)">'+holly+'</div>';
     o+='<div style="position:absolute;bottom:2%;left:2%;transform:scaleY(-1)">'+holly+'</div>';
@@ -537,8 +578,8 @@ function buildOverlay(){
       o+='<div style="font-size:18px;color:'+orn.c+';text-shadow:0 1px 3px rgba(0,0,0,.5)">&#127870;</div></div>';
     });
   }
-  // Message (only as overlay when no dedicated message row)
-  if(cardMsg&&getMsgRow()<0){
+  // Message (only as overlay when no dedicated message row/col)
+  if(cardMsg&&getMsgRow()<0&&getMsgCol()<0){
     o+='<div class="card-msg pos-'+cardPos+'" style="font-family:'+cardFont+';font-size:'+cardSize+'px;color:'+cardColor+'">'+escHtml(cardMsg)+'</div>';
   }
   o+='</div>';
@@ -974,40 +1015,39 @@ async function generatePrint(){
   let availH=ph-pad*2-gap*(cfg.rows-1);
   let rH=rowFlex.map(f=>(f/totalRF)*availH);
 
-  let mr=getMsgRow();
+  let mr=getMsgRow(),mr2=getMsgRow2(),mc=getMsgCol();
   let idx=0,totalCells=getTotalCells(),processed=0;
   let cy=pad;
 
+  function drawMsgBand(bx,by,bw,bh){
+    ctx.fillStyle='#1f1c18';
+    ctx.fillRect(bx,by,bw,bh);
+    if(cardMsg){
+      let sc=pw/500;
+      let fs=cardSize*sc;
+      ctx.font=fs+'px '+cardFont;
+      ctx.fillStyle=cardColor;
+      ctx.textAlign='center';
+      ctx.shadowColor='rgba(0,0,0,.6)';
+      ctx.shadowBlur=4*sc;
+      let words=cardMsg.split(' ');
+      let lines=[];let line='';let maxW=bw*0.85;
+      words.forEach(w=>{
+        let test=line?line+' '+w:w;
+        if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=w;}
+        else line=test;
+      });
+      if(line) lines.push(line);
+      let totalTH=lines.length*fs*1.3;
+      let startY=by+bh/2-totalTH/2+fs*0.85;
+      lines.forEach((l,i)=>{ctx.fillText(l,bx+bw/2,startY+i*fs*1.3);});
+      ctx.textAlign='start';ctx.shadowBlur=0;
+    }
+  }
+
   for(let r=0;r<cfg.rows;r++){
-    if(r===mr){
-      // Draw message row band
-      let bandH=rH[r];
-      let bandW=pw-pad*2;
-      // Background matches collage bg
-      ctx.fillStyle='#1f1c18';
-      ctx.fillRect(pad,cy,bandW,bandH);
-      if(cardMsg){
-        let sc=pw/500;
-        let fs=cardSize*sc;
-        ctx.font=fs+'px '+cardFont;
-        ctx.fillStyle=cardColor;
-        ctx.textAlign='center';
-        ctx.shadowColor='rgba(0,0,0,.6)';
-        ctx.shadowBlur=4*sc;
-        // Word wrap within band
-        let words=cardMsg.split(' ');
-        let lines=[];let line='';let maxW=bandW*0.9;
-        words.forEach(w=>{
-          let test=line?line+' '+w:w;
-          if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=w;}
-          else line=test;
-        });
-        if(line) lines.push(line);
-        let totalTH=lines.length*fs*1.3;
-        let startY=cy+bandH/2-totalTH/2+fs*0.85;
-        lines.forEach((l,i)=>{ctx.fillText(l,pw/2,startY+i*fs*1.3);});
-        ctx.textAlign='start';ctx.shadowBlur=0;
-      }
+    if(r===mr||r===mr2){
+      drawMsgBand(pad,cy,pw-pad*2,rH[r]);
       cy+=rH[r]+gap;
       continue;
     }
@@ -1018,6 +1058,11 @@ async function generatePrint(){
 
     for(let c=0;c<cfg.cols;c++){
       let cellW=cW[c],cellH=rH[r];
+      if(c===mc){
+        drawMsgBand(cx,cy,cellW,cellH);
+        cx+=cellW+gap;
+        continue;
+      }
       ctx.fillStyle='#f5f0e6';
       ctx.fillRect(cx,cy,cellW,cellH);
 
@@ -1078,13 +1123,22 @@ function drawCardOverlay(ctx,pw,ph){
   }
   // Holly corners
   if(cardGfx.holly){
-    let hs=22*sc;
-    ctx.font=hs+'px serif';
-    ctx.fillStyle='#fff';
-    ctx.fillText('\uD83C\uDF40',pw*0.02,ph*0.02+hs);
-    ctx.save();ctx.translate(pw*0.98,ph*0.02+hs);ctx.scale(-1,1);ctx.fillText('\uD83C\uDF40',0,0);ctx.restore();
-    ctx.save();ctx.translate(pw*0.02,ph*0.98);ctx.scale(1,-1);ctx.fillText('\uD83C\uDF40',0,0);ctx.restore();
-    ctx.save();ctx.translate(pw*0.98,ph*0.98);ctx.scale(-1,-1);ctx.fillText('\uD83C\uDF40',0,0);ctx.restore();
+    function drawHolly(cx,cy,s){
+      ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+      // leaves
+      ctx.fillStyle='#2d6a2d';
+      ctx.save();ctx.rotate(-0.5);ctx.beginPath();ctx.ellipse(0,4,8,5,0,0,Math.PI*2);ctx.fill();ctx.restore();
+      ctx.save();ctx.rotate(0.5);ctx.beginPath();ctx.ellipse(0,4,8,5,0,0,Math.PI*2);ctx.fill();ctx.restore();
+      // berries
+      ctx.fillStyle='#c33';
+      [[-2,-2],[2,-2],[0,2]].forEach(function(p){ctx.beginPath();ctx.arc(p[0],p[1],2.5,0,Math.PI*2);ctx.fill();});
+      ctx.restore();
+    }
+    let hs=1.2*sc;
+    drawHolly(pw*0.04,ph*0.04,hs);
+    drawHolly(pw*0.96,ph*0.04,hs);
+    drawHolly(pw*0.04,ph*0.96,hs);
+    drawHolly(pw*0.96,ph*0.96,hs);
   }
   // Stars
   if(cardGfx.stars){
@@ -1116,8 +1170,8 @@ function drawCardOverlay(ctx,pw,ph){
       ctx.shadowBlur=0;
     });
   }
-  // Message (only as overlay when no dedicated message row)
-  if(cardMsg&&getMsgRow()<0){
+  // Message (only as overlay when no dedicated message row/col)
+  if(cardMsg&&getMsgRow()<0&&getMsgCol()<0){
     let fs=cardSize*sc;
     ctx.font=fs+'px '+cardFont;
     ctx.fillStyle=cardColor;
