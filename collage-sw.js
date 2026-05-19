@@ -1,4 +1,4 @@
-const CACHE_NAME = 'collage-editor-v3';
+const CACHE_NAME = 'collage-editor-v4';
 const ASSETS = [
   './collage-editor.html',
   './collage-manifest.json',
