@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1a1a1a">
+  <meta name="description" content="Create beautiful photo collages with filters and high-resolution printing">
+  <title>Collage Editor</title>
+  <link rel="manifest" href="collage-manifest.json">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231a1a1a' width='192' height='192'/><rect fill='%23f0c060' x='16' y='16' width='60' height='60'/><rect fill='%2360c0f0' x='92' y='16' width='84' height='60'/><rect fill='%23c0f060' x='16' y='92' width='60' height='84'/><rect fill='%23f060c0' x='92' y='92' width='84' height='84'/></svg>">
+</head>
+<body>
+  <h1>📐 Collage Editor</h1>
+  <p class="sub">Create beautiful photo collages with professional printing</p>
+
+  <div class="container">
+    <!-- Preview Section -->
+    <div class="preview">
+      <div class="frame">
+        <div id="grid" class="p20x16 natural" style="--bg: #1f1c18; --mat: #f5f0e6;"></div>
+      </div>
+      <div id="progress" class="progress">
+        <div class="progress-text" id="progressText">Preparing...</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+      <div id="saved" class="saved">✓ Saved automatically</div>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls">
+      <!-- Image Management -->
+      <div class="panel frame">
+        <h3>📸 Images</h3>
+        <div class="cnt" id="cnt"><b>0</b> images</div>
+        <button class="btn add" id="addBtn">+ Add Images</button>
+        <div class="row2">
+          <button class="btn rep" id="repBtn">Replace</button>
+          <button class="btn del" id="delBtn">Delete</button>
+        </div>
+        <input type="file" id="addFile" accept="image/*" multiple>
+        <input type="file" id="repFile" accept="image/*">
+      </div>
+
+      <!-- Mode Selection -->
+      <div class="panel frame">
+        <h3>⚙️ Mode</h3>
+        <div class="modes">
+          <button class="mode" id="mEdit">Edit</button>
+          <button class="mode" id="mArr">Arrange</button>
+        </div>
+      </div>
+
+      <!-- Grid Settings -->
+      <div class="panel frame">
+        <h3>📏 Grid Layout</h3>
+        <div class="row2">
+          <div class="grp">
+            <label for="gridRows">Rows</label>
+            <input type="number" id="gridRows" min="1" max="12" value="2">
+          </div>
+          <div class="grp">
+            <label for="gridCols">Columns</label>
+            <input type="number" id="gridCols" min="1" max="12" value="4">
+          </div>
+        </div>
+        <div class="grp note-center">
+          <span id="slotsNote"><b>8</b> slots</span>
+        </div>
+      </div>
+
+      <!-- Print Settings -->
+      <div class="panel frame">
+        <h3>🖨️ Print Options</h3>
+        <div class="grp">
+          <label for="preset">Size Preset</label>
+          <select id="preset">
+            <option value="custom">Custom</option>
+            <option value="20x16">20×16 in (Landscape)</option>
+            <option value="16x20">16×20 in (Portrait)</option>
+            <option value="8x10">8×10 in (Compact)</option>
+          </select>
+        </div>
+        <div class="row2">
+          <div class="grp">
+            <label for="widthIn">Width</label>
+            <input type="number" id="widthIn" min="1" max="60" value="20" step="0.5">
+          </div>
+          <div class="grp">
+            <label for="heightIn">Height</label>
+            <input type="number" id="heightIn" min="1" max="60" value="16" step="0.5">
+          </div>
+        </div>
+        <div class="note-center note-tiny">300 DPI output</div>
+      </div>
+
+      <!-- Style Selection -->
+      <div class="panel frame">
+        <h3>🎭 Style & Filter</h3>
+        <div class="chips">
+          <button class="chip snat on" data-style="natural">Natural</button>
+          <button class="chip smcm" data-style="mcm">MCM</button>
+          <button class="chip sbw" data-style="bw">B&amp;W</button>
+          <button class="chip swbw" data-style="warmbw">Warm B&amp;W</button>
+        </div>
+        <div class="chips chips-row">
+          <button class="chip sz" data-w="1" data-h="1">1×1</button>
+          <button class="chip sz" data-w="2" data-h="2">2×2</button>
+          <button class="chip sz" data-w="3" data-h="3">3×3</button>
+          <button class="chip sz" data-w="-1" data-h="1">Full row</button>
+        </div>
+      </div>
+
+      <!-- Print & Reset -->
+      <div class="panel frame">
+        <button class="btn gen" id="generatePrint">🎨 Generate Print (300 DPI)</button>
+        <div class="row2">
+          <button class="btn sec" id="resetAll">Reset All</button>
+          <button class="btn sec" id="clearAll">Clear All</button>
+        </div>
+      </div>
+
+      <!-- Image Adjustments (collapsed when no image selected) -->
+      <div class="panel frame is-disabled" id="edits">
+        <h3>🎨 Image Settings</h3>
+        <div id="info" class="info">
+          <h4>No image selected</h4>
+          <p>Tap an image to adjust</p>
+        </div>
+
+        <div class="grp">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Image name">
+        </div>
+
+        <div class="grp">
+          <div class="sld">
+            <label class="sld-label" for="zoom">Zoom</label>
+            <span class="val" id="zoomV">100%</span>
+          </div>
+          <input type="range" id="zoom" min="100" max="250" value="100">
+        </div>
+
+        <div class="grp">
+          <div class="sld">
+            <label class="sld-label" for="panX">Pan X</label>
+            <span class="val" id="panXV">0%</span>
+          </div>
+          <input type="range" id="panX" min="-50" max="50" value="0">
+        </div>
+
+        <div class="grp">
+          <div class="sld">
+            <label class="sld-label" for="panY">Pan Y</label>
+            <span class="val" id="panYV">0%</span>
+          </div>
+          <input type="range" id="panY" min="-50" max="50" value="0">
+        </div>
+
+        <div class="grp">
+          <div class="sld">
+            <label class="sld-label" for="rot">Rotation</label>
+            <span class="val" id="rotV">0°</span>
+          </div>
+          <input type="range" id="rot" min="0" max="360" value="0">
+        </div>
+
+        <div class="row2">
+          <div class="grp">
+            <label for="colSpan">Width (cells)</label>
+            <div class="sld">
+              <input type="number" id="colSpan" min="1" max="12" value="1" class="sld-input">
+              <span class="val" id="colSpanV">1</span>
+            </div>
+          </div>
+          <div class="grp">
+            <label for="rowSpan">Height (cells)</label>
+            <div class="sld">
+              <input type="number" id="rowSpan" min="1" max="12" value="1" class="sld-input">
+              <span class="val" id="rowSpanV">1</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <button class="btn sec" id="resetOne">Reset</button>
+          <button class="btn sec" id="resetImage">Reset Image</button>
+        </div>
+      </div>
+
+      <div class="footer-meta">
+        <p>💾 Auto-saved to browser storage</p>
+        <p>📱 Works offline as PWA</p>
+      </div>
+    </div>
+  </div>
+
+  <noscript>
+    <p style="text-align:center;color:#f0c060;padding:20px;">This editor requires JavaScript.</p>
+  </noscript>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    if (!window.CSS || !window.CSS.supports || !window.CSS.supports('display', 'grid')) {
+      console.warn('CSS Grid not fully supported in this browser.');
+    }
+  </script>
+</body>
+</html>
