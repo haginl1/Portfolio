@@ -197,6 +197,7 @@ class CollageEditorApp {
     this.gridBuilder.build('grid');
     this.ui.updateImageCount();
     this.ui.updateGridDisplay();
+    this.ui.updatePrintSizeDisplay();
     this.ui.updateModeButtons();
     this.ui.updateStyleChips();
     this.ui.updateEditsPanelState();

@@ -67,6 +67,10 @@ class UIController {
           this.updateGridDisplay();
           this.gridBuilder.build('grid');
           break;
+        case 'print_size_updated':
+          this.updatePrintSizeDisplay();
+          this.gridBuilder.build('grid');
+          break;
         case 'image_selected':
           this.updateSelectionPanel(change.pos);
           break;
@@ -180,6 +184,13 @@ class UIController {
     document.getElementById('gridRows').value = this.state.gridRows;
     document.getElementById('gridCols').value = this.state.gridCols;
     document.getElementById('slotsNote').innerHTML = `<b>${this.state.gridRows * this.state.gridCols}</b> slots`;
+  }
+
+  updatePrintSizeDisplay() {
+    document.getElementById('widthIn').value = this.state.widthIn;
+    document.getElementById('heightIn').value = this.state.heightIn;
+    const grid = document.getElementById('grid');
+    if (grid) grid.style.aspectRatio = `${this.state.widthIn} / ${this.state.heightIn}`;
   }
 
   updateImageCount() {
