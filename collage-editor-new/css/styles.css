@@ -34,16 +34,50 @@ h1 {
   margin: 0 auto;
 }
 
-@media (min-width: 768px) {
+/* Tablet: two columns (preview + controls), image settings wrap full-width below */
+@media (min-width: 768px) and (max-width: 979px) {
   .container {
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 20px;
   }
   .preview {
-    flex: 1;
+    order: 1;
+    flex: 1 1 300px;
+    min-width: 0;
   }
   .controls {
-    width: 320px;
+    order: 2;
+    flex: 0 0 320px;
+  }
+  .edit-col {
+    order: 3;
+    flex: 1 1 100%;
+  }
+}
+
+/* Desktop: three columns — image settings as a sticky left sidebar next to the preview */
+@media (min-width: 980px) {
+  .container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .edit-col {
+    order: 1;
+    flex: 0 0 280px;
+    position: sticky;
+    top: 12px;
+  }
+  .preview {
+    order: 2;
+    flex: 1;
+    min-width: 0;
+  }
+  .controls {
+    order: 3;
+    flex: 0 0 320px;
   }
 }
 
